@@ -67,6 +67,7 @@
     --ring: 216 34% 17%;
 
     --radius: 0.5rem;
+
   }
 }
 
@@ -75,8 +76,9 @@
     @apply border-border;
   }
   body {
+    font-family: sans-serif;
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    /* font-feature-settings: "rlig" 1, "calt" 1; */
   }
 }
 
