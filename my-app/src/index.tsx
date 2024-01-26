@@ -4,20 +4,33 @@ import './index.css';
 import App from './App';
 import { ThemeProvider } from "./components/theme-provider"
 import reportWebVitals from './test/reportWebVitals';
-
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Register from "./pages/Register"
+import Profile from "./pages/Profile"
+import Training from "./pages/Training"
+import Home from "./pages/Home"
+import Login from "./pages/Login" 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+    <BrowserRouter>
+      <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/training" element={<Training />} />
+          <Route path="/login" element={<Login />} />
+      </Routes>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem
+        disableTransitionOnChange
+      >
       <App />
-    </ThemeProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

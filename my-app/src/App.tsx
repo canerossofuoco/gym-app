@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import './index.css';
 import {
   Card,
@@ -9,24 +9,23 @@ import {
   CardTitle,
 } from "./components/card"
 import { Button } from "./components/button"
-function App() {
-  return (
-    <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-      <Button variant="destructive">Bottone</Button>
-    </div>
-  );
+import Register from "./pages/Register"
+import Home from "./pages/Home"
+import Profile from "./pages/Profile"
+import Training from "./pages/Training"
+import Login from './pages/Login';
+
+
+const App = () => {
+  if(localStorage.getItem("loggato")=="1") {   //da sostituire con la jwt una volta fatta {
+    return (
+      <Login/>
+    );
+  } else {
+    return (
+      <Home/>
+    );
+  }
 }
 
 export default App;
