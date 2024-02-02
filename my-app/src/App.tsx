@@ -14,18 +14,14 @@ import Home from "./pages/Home"
 import Profile from "./pages/Profile"
 import Training from "./pages/Training"
 import Login from './pages/Login';
-
+import { Navigate } from 'react-router-dom';
 
 const App = () => {
-  if(localStorage.getItem("loggato")=="1") {   //da sostituire con la jwt una volta fatta {
-    return (
-      <Login/>
-    );
-  } else {
-    return (
-      <Home/>
-    );
-  }
-}
+  console.log(localStorage.getItem("loggato"));
+  const isUserLoggedIn = localStorage.getItem("loggato") === "giusto";
+  return (
+    isUserLoggedIn ? <Navigate to="/" replace ={true} /> : <Navigate to="/login" replace ={true} />
+  );
+};
 
 export default App;
