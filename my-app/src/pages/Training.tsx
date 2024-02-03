@@ -1,8 +1,13 @@
+import Navbar from "../components/navbar";
+
 function Training() {
     return (
-        <div>
-            
+        <>
+        <div id="trainingDiv" className="h-[91%]">
+            training
         </div>
+        <Navbar/>
+        </>
     );
 }
 

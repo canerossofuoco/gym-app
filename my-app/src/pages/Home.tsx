@@ -1,32 +1,15 @@
 import React, { useEffect,useState } from 'react';
 import '../index.css';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../components/card"
-import { Button } from "../components/button"
-import Register from "./Register"
-import Profile from "./Profile"
-import Training from "./Training"
-import { useNavigate } from "react-router-dom"
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import Login from './Login';
-
-const Home = () => {
-
-    const Navbar = () => {
-        
-    }
-
-    return ( 
-        <div id="HomeDiv">   
-        
+import { Navigate, useNavigate } from 'react-router-dom';
+import Navbar from '../components/navbar';
+function Home() {
+    return (
+        <>
+        <div id="HomeDiv" className="h-[91%] w-full ">   
+        home
         </div>
+        <Navbar/>
+        </>
     );
 }
-
 export default Home;

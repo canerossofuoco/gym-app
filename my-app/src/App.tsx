@@ -14,13 +14,23 @@ import Home from "./pages/Home"
 import Profile from "./pages/Profile"
 import Training from "./pages/Training"
 import Login from './pages/Login';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 const App = () => {
-  console.log(localStorage.getItem("loggato"));
   const isUserLoggedIn = localStorage.getItem("loggato") === "giusto";
   return (
-    isUserLoggedIn ? <Navigate to="/" replace ={true} /> : <Navigate to="/login" replace ={true} />
+    <Routes>
+    { isUserLoggedIn ? (<>
+        <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/training" element={<Training />} />
+        <Route path="*" element={<Home />} />
+        </>) : 
+        (<>
+          <Route path="*" element={<Login />} />
+        </>) 
+    } 
+    </Routes>
   );
 };
 

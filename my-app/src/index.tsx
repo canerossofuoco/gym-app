@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { ThemeProvider } from "./components/theme-provider"
+import { useTheme } from "next-themes"
 import reportWebVitals from './test/reportWebVitals';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Register from "./pages/Register"
@@ -13,18 +14,15 @@ import Login from "./pages/Login"
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+const theme = "light";
+localStorage.setItem("theme",theme);
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/training" element={<Training />} />
-          <Route path="/login" element={<Login />} />
-      </Routes>
       <ThemeProvider
         attribute="class"
-        defaultTheme="dark"
+        defaultTheme={theme}
         enableSystem
         disableTransitionOnChange
       >

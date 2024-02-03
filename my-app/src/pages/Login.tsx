@@ -7,7 +7,7 @@ const Form = ()=> {
             <p className="text-xl mb-2 font-bold">Login</p>
             <Input type="text" placeholder="Username" className="mb-2"/>
             <Input type="password" placeholder="Password" className="mb-2"/>
-            <Button>Accedi</Button>
+            <Button onClick={()=>localStorage.setItem("loggato","giusto")}>Accedi</Button>
         </form>
     )
 }
