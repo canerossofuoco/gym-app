@@ -15,6 +15,7 @@ import Profile from "./pages/Profile"
 import Training from "./pages/Training"
 import Login from './pages/Login';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import CaloriesPage from './pages/caloriesPage';
 
 const App = () => {
   const isUserLoggedIn = localStorage.getItem("loggato") === "giusto";
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/training" element={<Training />} />
+        <Route path="/caloriespage" element={<CaloriesPage />} />
         <Route path="*" element={<Home />} />
         </>) : 
         (<>

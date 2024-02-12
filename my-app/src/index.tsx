@@ -14,7 +14,7 @@ import Login from "./pages/Login"
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-const theme = "light";
+const theme = "dark";
 localStorage.setItem("theme",theme);
 
 root.render(
