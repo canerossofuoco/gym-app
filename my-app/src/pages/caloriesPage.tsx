@@ -49,7 +49,7 @@ function CaloriesPage() {
         <>
         <div id="caloriesPage" className="h-[91%] w-full p-[5%]">
             <Input type="text" placeholder="search" value={inputValue} onChange={handleChange} className="rounded-xl h-9 w-full mt-[2%] bg-secondary shadow-md"/> 
-            <div className="h-[95%] p-[3%]" dangerouslySetInnerHTML={{ __html: resultString }}/>
+            <div className="h-[95%] p-[3%] overflow-x-hidden overflow-y-auto" dangerouslySetInnerHTML={{ __html: resultString }}/>
         </div>
         <Navbar/>
         </>
