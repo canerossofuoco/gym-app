@@ -1,21 +1,19 @@
 <?php 
     require("functions.inc");
-    $array = verify_cookie($_POST["cookie"]);
     $carbo = $_POST["carboidrati"];
     $proteine = $_POST["proteine"];
     $grassi = $_POST["grassi"];
-    if($array["login"]) {
-        $risposta = array("login" => true);
-        $email = $array["email"];
+    if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
+        $res = array("login" => true);
+        $email = $_POST["cookie_email"];
         $conn = new mysqli("localhost","root","","gym_app");
         $query= "update dati_kcal set gCarboidrati=$carbo, gProteine=$proteine , gGrassi=$grassi where email_utente='$email';";
-        $result = $conn->query($query);
-        $risposta["query"] = $query;
-        if($result)
-            $risposta["inserimento"] = true;
+        $result_query = $conn->query($query);
+        if($result_query)
+            $res["insert"] = true;
         else 
-            $risposta["inserimento"] = false;
+            $res["insert"] = false;
     }else 
-        $risposta["login"] = false;
-    echo json_encode($risposta);
+        $res["login"] = false;
+    echo json_encode($res);
 ?>

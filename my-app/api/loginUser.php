@@ -1,29 +1,36 @@
 <?php
+    require("functions.inc");
+
+    $res = array("array risposta" => "loginUser");
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $conn = new mysqli("localhost","root","","gym_app");
-    if($conn->connect_error) 
-        $risposta = array("messaggio" => "Connection Failed");
-    else
-    {
-        $risposta = array("messaggio" => "Connected succesfully"); 
-    }
-    $query = "select * from utenti where email='$email' and psw='$password'";
-    $risposta["query"] = $query;
-    $result = $conn->query($query);
-    if($result->num_rows==1) {
-        $row = $result->fetch_assoc();
-        $rand = rand(1000,9999);
-        $query = "insert into cookie values($rand,'".$row["email"]."');";
-        $idCookie = $rand;
-        $emailCookie = $row["email"];
-        if($conn->query($query)) {
-            $risposta["login"] = true;
-            $risposta["idCookie"] = $rand;
-            $risposta["emailCookie"] = $emailCookie;
+
+    if(isset($_POST["cookie_id"],$_POST["cookie_email"])) {
+        if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
+            $res["login"] = true;
         }
-    }else { 
-        $risposta["login"] = false;
+    } else {
+        $conn = new mysqli("localhost","root","","gym_app");
+        if($conn->connect_error) 
+            $res["message"] = "Connection failed";
+        else
+            $res["message"] = "Connected Succeffully";
+        $query = "select * from utenti where email='$email' and psw='$password'";
+        $result_query = $conn->query($query);
+        if($result_query->num_rows==1) {
+            $row = $result_query->fetch_assoc();
+            $rand = rand(1000,9999);
+            $query = "insert into cookie values($rand,'".$row["email"]."');";
+            $idCookie = $rand;
+            $emailCookie = $row["email"];
+            if($conn->query($query)) {
+                $res["login"] = true;
+                $res["idCookie"] = $rand;
+                $res["emailCookie"] = $emailCookie;
+            }
+        }else { 
+            $risposta["login"] = false;
+        }
     }
-    echo json_encode($risposta);
+    echo json_encode($res);
 ?>

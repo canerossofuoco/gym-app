@@ -1,16 +1,15 @@
 <?php
     require("functions.inc");
-    $array = verify_cookie($_POST["cookie"]);
     $conn = new mysqli("localhost","root","","gym_app");
-    if($array["login"]) {
-        $query = "select * from dati_kcal where email_utente='".$array["email"]."'";
-        $result = $conn->query($query); 
-        if($result->num_rows==1) {
+    if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
+        $query = "select * from dati_kcal where email_utente='".$_POST["cookie_email"]."'";
+        $result_query = $conn->query($query); 
+        if($result_query->num_rows==1) {
             $row = $result->fetch_assoc();
-            $risposta["dati_kcal"] = $row;
+            $res["dati_kcal"] = $row;
         }
     }else {
-        $risposta["login"] = false;
+        $res["login"] = false;
     }
-    echo json_encode($risposta);
+    echo json_encode($res);
 ?>
