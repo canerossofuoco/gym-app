@@ -14,6 +14,7 @@
 
     $url =  $_SERVER['PHP_SELF'];
     $url = substr($url,10);
+    global $conn;
     $conn = new mysqli("localhost","root","","gym_app");
     if($conn->connect_error) 
         echo "Connection failed";
@@ -27,7 +28,7 @@
         echo "Errore 404: Pagina non trovata";
 
     function addFood() {
-
+        global $conn;
         $res = array("array risposta" => "addFood");
         $carbo = $_POST["carboidrati"];
         $proteine = $_POST["proteine"];
@@ -48,7 +49,7 @@
     }
 
     function loginUser() {
-
+        global $conn;
         $res = array("array risposta" => "loginUser");
         $email = $_POST["email"];
         $password = $_POST["password"];
@@ -80,13 +81,13 @@
     }
 
     function requestCalories() {
-
+        global $conn;
         $res = array("array risposta" => "requestCalories");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $query = "select * from dati_kcal where email_utente='".$_POST["cookie_email"]."'";
             $result_query = $conn->query($query); 
             if($result_query->num_rows==1) {
-                $row = $result->fetch_assoc();
+                $row = $result_query->fetch_assoc();
                 $res["dati_kcal"] = $row;
             }
         }else {
@@ -97,7 +98,7 @@
     }
 
     function addWorkout() {
-        
+        global $conn;
         $res = array("array risposta" => "addWorkout");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $nome = $_POST["nome"];
@@ -114,6 +115,7 @@
     }
 
     function addExercise() {
+        global $conn;
         $res = array("array risposta" => "addExerciset");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $nome = $_POST["nome"];
@@ -132,7 +134,7 @@
 
         $idw = -1;
         $ide = -1;
-        
+        global $conn;
         $res = array("array risposta" => "addExerciseToWorkout");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $res["login"] = true;
@@ -142,21 +144,21 @@
 
             $query = "select * from workouts where nome='$nome' and email_utente='$email';";  //seleziono id workout
             $res_query = $conn->query($query);
-            if($result_query->num_rows==1) {
-                $row = $result->fetch_assoc();
+            if($res_query->num_rows==1) {
+                $row = $res->query->fetch_assoc();
                 $idw = $row["id"];
             }
 
             $query = "select * from esercizi where nome='$nome_esercizio' and email_utente='$email';"; //seleziono id esercizio
             $res_query = $conn->query($query);
-            if($result_query->num_rows==1) {
-                $row = $result->fetch_assoc();
+            if($res_query->num_rows==1) {
+                $row = $res->query->fetch_assoc();
                 $ide = $row["id"];
             }
             
-            $query "insert into esercizi_workouts values($idw,$ide);"; //inserimento associazione workout-esercizio
+            $query = "insert into esercizi_workouts values($idw,$ide);"; //inserimento associazione workout-esercizio
             $res_query = $conn->query($query);
-            if($result_query)
+            if($res->query)
                 $res["inserimento"]  = true;
             else 
                 $res["inserimento"] = false;
@@ -166,6 +168,7 @@
     }
 
     function requestProfile() {
+        global $conn;
         $res = array("array risposta" => "requestProfile"); 
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $res["login"] = true;
@@ -173,7 +176,7 @@
             $query = "select * from utenti where email = '$email';";
             $result_query = $conn->query($query);
             if($result_query->num_rows==1) {
-                $row = $result->fetch_assoc();
+                $row = $result_query->fetch_assoc();
                 $res["nome"] = $row["nome"];
                 $res["cognome"] = $row["cognome"];
                 $res["eta"] = $row["eta"];
@@ -188,6 +191,7 @@
     }
     
     function requestWorkout() {
+        global $conn;
         $res = array("array risposta" => "requestWorkout");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $res["login"] = true;
@@ -206,7 +210,7 @@
     }
 
     function modifyExercise() {
-        
+        global $conn;
         $res = array("array risposta" => "modifyExercise");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $res["login"] = true;
