@@ -27,7 +27,7 @@
     } else 
         echo "Errore 404: Pagina non trovata";
 
-    function addFood() {
+    function addFood() { //works
         global $conn;
         $res = array("array risposta" => "addFood");
         $carbo = $_POST["carboidrati"];
@@ -48,7 +48,7 @@
 
     }
 
-    function loginUser() {
+    function loginUser() { //works
         global $conn;
         $res = array("array risposta" => "loginUser");
         $email = $_POST["email"];
@@ -80,7 +80,7 @@
 
     }
 
-    function requestCalories() {
+    function requestCalories() { //works
         global $conn;
         $res = array("array risposta" => "requestCalories");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
@@ -97,40 +97,44 @@
 
     }
 
-    function addWorkout() {
+    function addWorkout() {  //works
         global $conn;
         $res = array("array risposta" => "addWorkout");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
+            $res["login"] = true;
             $nome = $_POST["nome"];
             $email = $_POST["cookie_email"];
-            $query = "insert into workouts values('$nome','$email');";
+            $query = "insert into workouts (nome,email_utente) values('$nome','$email');";
             $res_query = $conn->query($query);
             if($res_query)
                 $res["inserimento"] = true;
             else 
                 $res["inserimento"] = false;
-        }
+        }else 
+            $res["login"] = false;
         echo json_encode($res);
 
     }
 
-    function addExercise() {
+    function addExercise() { //works
         global $conn;
-        $res = array("array risposta" => "addExerciset");
+        $res = array("array risposta" => "addExercise");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
+            $res["login"] = true;
             $nome = $_POST["nome"];
             $email = $_POST["cookie_email"];
-            $query = "insert into esercizi values('$nome','$email','');";
+            $query = "insert into esercizi (nome,email_utente,stringa_peso) values('$nome','$email','');";
             $result_query = $conn->query($query);
             if($result_query)
                 $res["inserimento"] = true;
             else 
                 $res["inserimento"] = false;
-            echo json_encode($res);
-        }
+        }else 
+            $res["login"] = false;
+        echo json_encode($res);
     }
 
-    function addExerciseToWorkout() {
+    function addExerciseToWorkout() { //works
 
         $idw = -1;
         $ide = -1;
@@ -145,20 +149,20 @@
             $query = "select * from workouts where nome='$nome' and email_utente='$email';";  //seleziono id workout
             $res_query = $conn->query($query);
             if($res_query->num_rows==1) {
-                $row = $res->query->fetch_assoc();
+                $row = $res_query->fetch_assoc();
                 $idw = $row["id"];
             }
 
             $query = "select * from esercizi where nome='$nome_esercizio' and email_utente='$email';"; //seleziono id esercizio
             $res_query = $conn->query($query);
             if($res_query->num_rows==1) {
-                $row = $res->query->fetch_assoc();
+                $row = $res_query->fetch_assoc();
                 $ide = $row["id"];
             }
             
             $query = "insert into esercizi_workouts values($idw,$ide);"; //inserimento associazione workout-esercizio
             $res_query = $conn->query($query);
-            if($res->query)
+            if($res_query)
                 $res["inserimento"]  = true;
             else 
                 $res["inserimento"] = false;
@@ -167,7 +171,7 @@
         echo json_encode($res);
     }
 
-    function requestProfile() {
+    function requestProfile() {  //works
         global $conn;
         $res = array("array risposta" => "requestProfile"); 
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
@@ -190,26 +194,27 @@
         echo json_encode($res);
     }
     
-    function requestWorkout() {
+    function requestWorkout() { //works
         global $conn;
         $res = array("array risposta" => "requestWorkout");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $res["login"] = true;
+            $res["workouts"] = "[";
             $email = $_POST["cookie_email"];
             $query = "select * from workouts where email_utente='$email';";
             $result_query = $conn->query($query);
             if($result_query->num_rows>0) {
                 while($row=$result_query->fetch_assoc()) { //da verificare questa cosa
-                    $res["workouts"].=$row;
+                    $res["workouts"].= /* "'id':".$row["id"].",'nome':".$row["nome"].",'email_utente':".$row["email_utente"]; */ json_encode($row);
                 }
-            }else 
-                $res["workouts"] = "";
+                $res["workouts"].="]";
+            }
         }else 
             $res["login"] = false;
         echo json_encode($res); 
     }
 
-    function modifyExercise() {
+    function modifyExercise() {  //works
         global $conn;
         $res = array("array risposta" => "modifyExercise");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
@@ -217,11 +222,16 @@
             $email = $_POST["cookie_email"];
             $nome = $_POST["nome_esercizio"];
             $peso = $_POST["stringa_peso"];
-            $query = "update esercizi set stringa_peso='$peso' where email_utente='$email' and nome='$nome';";
+            $query = "select * from esercizi where email_utente='$email' and nome='$nome';";
             $result_query = $conn->query($query);
-            if($result_query) 
-                $res["inserimento"] = true;
-            else 
+            if($result_query->num_rows==1) {
+                $query = "update esercizi set stringa_peso='$peso' where email_utente='$email' and nome='$nome';";
+                $result_query = $conn->query($query);
+                if($result_query) 
+                    $res["inserimento"] = true;
+                else 
+                    $res["inserimento"] = false;
+            }else 
                 $res["inserimento"] = false;
         }else 
             $res["login"] = false;
