@@ -7,7 +7,6 @@ import AddFoods from '../components/addFoods';
 function Home() {
     return (
         <>
-        
         <div id="HomeDiv" className="h-[91%] w-full p-[5%]">   
             <CaloriesCard/>
             <AddFoods/>

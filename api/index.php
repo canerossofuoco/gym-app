@@ -1,7 +1,7 @@
 <?php
     require("functions.inc");
     $routes = array(
-        '/addFood' => 'addFood',
+        '/add/Food' => 'addFood',
         '/loginUser' => 'loginUser',
         '/request/Calories' => 'requestCalories',
         '/add/workout' => 'addWorkout',
