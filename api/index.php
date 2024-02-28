@@ -54,7 +54,7 @@
         $email = $_POST["email"];
         $password = $_POST["password"];
 
-        if(isset($_POST["cookie_id"],$_POST["cookie_email"])) {
+        if(isset($_POST["cookie_id"],$_POST["cookie_email"]) && $_POST["cookie_id"]!=null && $_POST["cookie_email"]!=null) {
             if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
                 $res["login"] = true;
             }
@@ -69,8 +69,8 @@
                 $emailCookie = $row["email"];
                 if($conn->query($query)) {
                     $res["login"] = true;
-                    $res["idCookie"] = $rand;
-                    $res["emailCookie"] = $emailCookie;
+                    $res["cookie_id"] = $rand;
+                    $res["cookie_email"] = $emailCookie;
                 }
             }else { 
                 $res["login"] = false;

@@ -26,11 +26,11 @@ export async function addFood(id: any, email: any, c: any, p: any, f: any) {
 }
 
 
-export async function loginUser(id: any,email: string, psw: any, e: any, p: any ) {
+export async function loginUser(id: any,email: any, psw: any, e: any ) {
     let res: any;
 
     const data = {
-        cookie_id : id,
+        cookie_id : id != null ? id : null,
         cookie_email: email,
         email : e,
         password: psw

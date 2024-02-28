@@ -5,7 +5,9 @@ function Profile() {
     return (
         <>
         <div id="profileDiv" className="h-[91%]">
-            <Button variant="destructive" onClick={ ()=>{localStorage.removeItem("loggato");
+            <Button variant="destructive" onClick={ ()=>{
+                localStorage.removeItem("cookie_id");
+                localStorage.removeItem("cookie_email");
                 window.location.reload();
             }
             }>Esci</Button>
