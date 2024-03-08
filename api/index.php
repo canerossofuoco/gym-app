@@ -16,10 +16,13 @@
     $url = substr($url,10);
     global $conn;
     $conn = new mysqli("localhost","root","","gym_app");
-    if($conn->connect_error) 
-        echo "Connection failed";
-    else
-        echo "Connected Succeffully";
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type");
+    // if($conn->connect_error) 
+    //     echo "Connection failed";
+    // else
+    //     echo "Connected Succeffully";
     
     if(array_key_exists($url,$routes)) {
         $functionName = $routes[$url];
