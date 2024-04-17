@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 function AddFoods() {
 
     const navigate = useNavigate();
-     //filtro da applciare per fare le icone bianche-> filter : invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+    //filtro da applciare per fare le icone bianche-> filter : invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
     var currentTheme = localStorage.getItem("theme");
     var cssImg = currentTheme==="light" ? "h-[80%] pr-[2%] pt-[3%]" : "h-[80%] pr-[2%] pt-[3%] filter invert-[100%] sepia-[100%] saturate-[0%] hue-rotate-[288deg] brightness-[102%] contrast-[102%]";
     return (

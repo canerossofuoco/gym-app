@@ -2,16 +2,12 @@ import { Progress } from "./progress";
 import { requestCalories } from "../scripts/fetch";
 import { useEffect, useState } from "react";
 
-
-
-
 function CaloriesCard() {
     async function getData() {
         var cookie_id = localStorage.getItem("cookie_id");
         var cookie_email = localStorage.getItem("cookie_email");
         var res = await requestCalories(cookie_id,cookie_email);
         var dati = res["dati_kcal"];
-        console.log(dati);
         setDataValue(dati);
         //console.log(dati["gCarboidrati"]);
     }
