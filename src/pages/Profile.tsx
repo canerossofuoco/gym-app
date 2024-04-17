@@ -10,7 +10,7 @@ function Profile() {
             <Button variant="destructive" onClick={ ()=>{
                 localStorage.removeItem("cookie_id");
                 localStorage.removeItem("cookie_email");
-                navigate("/");
+                window.location.reload();
             }
             }>Esci</Button>
         </div>
