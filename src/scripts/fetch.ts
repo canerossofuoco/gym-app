@@ -1,16 +1,17 @@
 
 import axios, { AxiosResponse } from "axios";
 
-const urlServer = "http://172.20.10.8:80/index.php";
+const urlServer = "http://localhost:80/index.php";
 const qs = require('qs');
-export async function addFood(id: any, email: any, c: any, p: any, f: any) {
+export async function addFood(id: any, email: any, c: any, p: any, f: any, calories:any) {
     let res: any;
     const data = {
         cookie_id: id,
         cookie_email: email,
         carboidrati: c,
         proteine: p,
-        grassi: f
+        grassi: f,
+        calorie: calories
     };
 
     await axios.post(urlServer + "/add/Food", data)

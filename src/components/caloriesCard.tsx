@@ -11,6 +11,7 @@ function CaloriesCard() {
         var cookie_email = localStorage.getItem("cookie_email");
         var res = await requestCalories(cookie_id,cookie_email);
         var dati = res["dati_kcal"];
+        console.log(dati);
         setDataValue(dati);
         //console.log(dati["gCarboidrati"]);
     }
@@ -19,11 +20,13 @@ function CaloriesCard() {
     useEffect(() => { 
         getData()
       }, []);
-    //@ts-ignore
+      /*@ts-ignore */
+      if(dataValue!=null) 
         return ( 
         <div id="divCalories" className="w-full h-[33%] rounded-xl p-[4%] shadow-md border bg-secondary flex-col justify-between align-middle">
             <p className="text-secondary-foreground mb-2 font-bold"  >Calories</p>
-            <Progress value={65}/>
+            { /*@ts-ignore */ }
+            <Progress value={ (dataValue["calorie"]/3000) * 100}/>
             <div className=" pt-[6%]">
                 <div className="p-[4%] flex ">
                     <p className="text-secondary-foreground font-bold pr-[2%]">C </p>
@@ -44,6 +47,12 @@ function CaloriesCard() {
             {/* <p className="p-1">a</p>
             <p className="p-1">b</p>
             <p className="p-1">c</p> lol*/}
+        </div>
+    )
+    else 
+    return ( 
+        <div id="divCalories" className="w-full h-[33%] rounded-xl p-[4%] shadow-md border bg-secondary flex-col justify-between align-middle">
+            <p className="text-secondary-foreground mb-2 font-bold flex-col justify-center"  >NO DATA FOUND </p>
         </div>
     )
 }

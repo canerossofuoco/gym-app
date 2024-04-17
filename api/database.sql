@@ -22,6 +22,7 @@ create table esercizi(
 
 create table dati_kcal(
     id int AUTO_INCREMENT PRIMARY KEY,
+    calorie int,
     gCarboidrati int,
     gProteine int,
     gGrassi int,

@@ -36,10 +36,12 @@
         $carbo = $_POST["carboidrati"];
         $proteine = $_POST["proteine"];
         $grassi = $_POST["grassi"];
+        $calorie = $_POST["calorie"];
+
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $res["login"]= true;
             $email = $_POST["cookie_email"];
-            $query= "update dati_kcal set gCarboidrati=$carbo, gProteine=$proteine , gGrassi=$grassi where email_utente='$email';";
+            $query= "update dati_kcal set calorie = $calorie, gCarboidrati=$carbo, gProteine=$proteine , gGrassi=$grassi where giorno= curdate() ;";
             $result_query = $conn->query($query);
             if($result_query)
                 $res["insert"] = true;
@@ -87,7 +89,7 @@
         global $conn;
         $res = array("array risposta" => "requestCalories");
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
-            $query = "select * from dati_kcal where email_utente='".$_POST["cookie_email"]."'";
+            $query = "select * from dati_kcal where email_utente='".$_POST["cookie_email"]."' and giorno = curdate()";
             $result_query = $conn->query($query); 
             if($result_query->num_rows==1) {
                 $row = $result_query->fetch_assoc();
