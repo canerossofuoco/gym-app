@@ -14,7 +14,7 @@ export async function addFood(id: any, email: any, c: any, p: any, f: any, calor
         calorie: calories
     };
 
-    await axios.post(urlServer + "/add/Food", data)
+    await axios.post(urlServer + "/add/Food", qs.stringify(data))
         .then((response: AxiosResponse) => {
             res = response.data;
         })

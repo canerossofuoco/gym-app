@@ -16,9 +16,12 @@ const CaloriesPage: React.FC = () => {
     const [resultArray, setResultArray] = useState<FoodItem[]>([]);
     const [inputValue, setInputValue] = useState('');
 
-    const handleClick = (calories: number, carbo: number, protein: number, fat: number) => {
+    async function handleClick (calories: number, carbo: number, protein: number, fat: number) {
         console.log(calories, carbo, protein, fat);
-        //fai funzine che carica le calorie con addFood
+        var cookie_id = localStorage.getItem("cookie_id");
+        var cookie_email = localStorage.getItem("cookie_email");
+        var res = await addFood(cookie_id,cookie_email,carbo,protein,fat,calories);
+        console.log(res);
     };
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

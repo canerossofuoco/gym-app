@@ -41,7 +41,14 @@
         if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
             $res["login"]= true;
             $email = $_POST["cookie_email"];
-            $query= "update dati_kcal set calorie = $calorie, gCarboidrati=$carbo, gProteine=$proteine , gGrassi=$grassi where giorno= curdate() ;";
+            $query = "select * from dati_kcal where email_utente='$email' and giorno=curdate();";
+            $result_query = $conn->query($query);
+            if($result_query->num_rows==1)
+                $query= "update dati_kcal set calorie = calorie+$calorie, gCarboidrati= gCarboidrati+ $carbo, gProteine= gProteine+ $proteine , gGrassi= gGrassi+ $grassi where giorno= curdate() and email_utente='$email';";
+            else 
+                $query = "insert into dati_kcal (calorie,gCarboidrati,gProteine,gGrassi,email_utente,giorno) values($calorie,$carbo,$proteine,$grassi,'$email',curdate());";
+            
+            echo $query;
             $result_query = $conn->query($query);
             if($result_query)
                 $res["insert"] = true;
