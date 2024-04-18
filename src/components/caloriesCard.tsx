@@ -32,12 +32,12 @@ function CaloriesCard() {
                 <div className="p-[4%] flex ">
                     <p className="text-secondary-foreground font-bold pr-[2%]">P</p>
                     { /*@ts-ignore */ }
-                    <div className="w-full pt-[3%]"><Progress value={(dataValue["gProteine"]/150)*100} className="w-2/3"/></div>
+                    <div className="w-full pt-[3%]"><Progress value={(dataValue["gProteine"]/150) * 100 < 100 ? (dataValue["gProteine"]/150) * 100 : 100} className="w-2/3"/></div>
                 </div>
                 <div className="p-[4%] flex ">
                     <p className="text-secondary-foreground font-bold pr-[2%]">F</p>
                     { /*@ts-ignore */ }
-                    <div className="w-full pt-[3%]"><Progress value={(dataValue["gGrassi"]/80)*100} className="w-2/3"/></div>
+                    <div className="w-full pt-[3%]"><Progress value={(dataValue["gGrassi"]/80) * 100 < 100 ? (dataValue["gGrassi"]/80) * 100 : 100} className="w-2/3"/></div>
                 </div>
             </div>
             {/* <p className="p-1">a</p>
