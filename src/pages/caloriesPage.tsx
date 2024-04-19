@@ -3,6 +3,14 @@ import Navbar from '../components/navbar';
 import { Input } from "../components/input"
 import axios from 'axios';
 import { addFood } from "../scripts/fetch"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "../components/dialog"
 
 interface FoodItem {
     name: string;
@@ -53,18 +61,27 @@ const CaloriesPage: React.FC = () => {
                     className="rounded-xl h-9 w-full mt-[2%] bg-secondary shadow-md"
                 />
                 <div className="h-[95%] p-[3%] overflow-x-hidden overflow-y-auto">
-                    {resultArray.map((item) => (
-                        <div
-                            key={item.name}
-                            className="h-[10%] border rounded-xl bg-secondary mt-[4%] justify-around flex"
-                            onClick={() => handleClick(item.calories, item.carbohydrates_total_g, item.protein_g, item.fat_total_g)}
-                        >
+                {resultArray.map((item) => (
+                    <>
+                     <Dialog>
+                        <DialogTrigger className="h-[10%] rounded-xl bg-secondary mt-[4%] justify-around flex w-[100%]" onClick={() => handleClick(item.calories, item.carbohydrates_total_g, item.protein_g, item.fat_total_g)}> 
                             <p className="text-secondary-foreground font-bold pl-[1%] text-xl mt-[4%]">{item.name}</p>
                             <p className="mt-[5%]">{item.calories}</p>
-                            <p className="mt-[5%]">{item.carbohydrates_total_g}</p>
-                            <p className="mt-[5%]">{item.protein_g}</p>
-                            <p className="mt-[5%]">{item.fat_total_g}</p>
-                        </div>
+                            <p className="mt-[5%] ">{item.carbohydrates_total_g}</p>
+                            <p className="mt-[5%] ">{item.protein_g}</p>
+                            <p className="mt-[5%]">{item.fat_total_g}</p>    
+                        </DialogTrigger>
+                         <DialogContent  className="rounded-xl ">
+                             <DialogHeader>
+                             <DialogTitle> 
+                                <p className="text-secondary-foreground mb-2 font-bold"  >Added</p>
+                             </DialogTitle>
+                             <DialogDescription>
+                             </DialogDescription>
+                             </DialogHeader>
+                         </DialogContent>
+                     </Dialog>
+                     </>
                     ))}
                 </div>
             </div>
