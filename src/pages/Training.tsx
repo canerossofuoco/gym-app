@@ -20,13 +20,25 @@ function delay(ms: number) {
 
 function Training () {
 
+    const [workoutData, setWorkoutData] = useState([]);
+
     useEffect(() => {
+        console.log("reload")
         setClickedExercises([]);
+        async function fetchWorkout() {
+            try {
+                var res = await requestWorkout(localStorage.getItem("cookie_id"), localStorage.getItem("cookie_email"));
+                res = res["workouts"];
+                setWorkoutData(res); // Imposta i dati del workout nello stato
+            } catch (error) {
+                console.error('Error loading workout:', error);
+            }
+        }
+
+        fetchWorkout();
     }, []);
 
     const [workoutname, setWorkoutname] = useState('');
-
-    const [color, setColor] = useState('secondary');
 
     const [resultArray, setResultArray] = useState([]);
 
@@ -80,13 +92,12 @@ function Training () {
                                 <Input type="text" placeholder="Muscle worked" className="mb-2 h-10 w-[80%]" onChange={handleChange} />
                                 <Button className="w-[20%] h-10" onClick={ async () => {
                                     var res;
-                                    await addWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname)
-                                    for (let index = 0; index < clickedExercises.length; index++) {
-                                        await addExercise(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises[index]);
-                                        res = await addExerciseToWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname,clickedExercises[index]);
-                                    }
-                                    if(res["inserimento"]) {
-                                        
+                                    if(workoutname!= "" && clickedExercises.length>0) {
+                                        await addWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname)
+                                        for (let index = 0; index < clickedExercises.length; index++) {
+                                            await addExercise(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises[index]);
+                                            res = await addExerciseToWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname,clickedExercises[index]);
+                                        }
                                     }
                                 }}>Done</Button>
                             </DialogTitle>
@@ -94,7 +105,7 @@ function Training () {
                                 
                                 {resultArray.map((item, index) => (
                                     <>
-                                    <div key={index} id={""+index} className={`h-[10%] border rounded-xl bg-secondary mt-[4%] justify-around flex`}>
+                                    <div id={""+index} className={`h-[10%] border rounded-xl bg-secondary mt-[4%] justify-around flex`}>
                                         {/* @ts-ignore */}
                                         <p className="text-secondary-foreground font-bold pl-[1%] text-xl mt-[4%]" onClick={() =>   handleItemClick(index,item.name)}  >{item.name}</p>
                                     </div>
@@ -107,11 +118,64 @@ function Training () {
                 </Dialog>
         );
     }
+
+    function mappaWorkout(item:any) {
+        return (
+            <>
+            <div className={`h-[10%] border rounded-xl bg-secondary mt-[4%] justify-around flex `}>
+                {/* @ts-ignore */}
+                <p className="text-secondary-foreground font-bold pl-[1%] text-xl mt-[4%]">{item.nome}</p>
+            </div>
+            </>
+        );
+    }
+
     return (
         <>
-            <div id="trainingDiv" className="h-[91%] w-full p-[5%]">
-                <CreateWorkoutPopUp/>
-                <LoadWorkout/>
+            <div id="trainingDiv" className="h-[91%] w-full p-[5%] overflow-x-hidden overflow-y-auto">
+            <Dialog>
+                    <DialogTrigger className="bg-secondary border h-[10%] rounded-xl shadow-md flex justify-between w-full">
+                        <AddWorkout />
+                    </DialogTrigger>
+                    <DialogContent className="rounded-xl h-[55%] overflow-x-hidden overflow-y-auto">
+                        <DialogHeader>
+                            <DialogTitle className="h-[30%] flex">
+                                <Input type="text" placeholder="Workout Name" className="mb-2 h-10 w-[80%]" onChange={handleNameChange}/>
+                                <Input type="text" placeholder="Muscle worked" className="mb-2 h-10 w-[80%]" onChange={handleChange} />
+                                <Button className="w-[20%] h-10" onClick={ async () => {
+                                    var res;
+                                    if(workoutname!= "" && clickedExercises.length>0) {
+                                        await addWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname)
+                                        for (let index = 0; index < clickedExercises.length; index++) {
+                                            await addExercise(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises[index]);
+                                            res = await addExerciseToWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname,clickedExercises[index]);
+                                            if(res["inserimento"]) 
+                                                alert("aggiunto")
+                                        }
+                                    }
+                                }}>Done</Button>
+                            </DialogTitle>
+                            <DialogDescription className="h-[100%] w-[100%]">
+                                
+                                {resultArray.map((item, index) => (
+                                    <>
+                                    <div id={""+index} className={`h-[10%] border rounded-xl bg-secondary mt-[4%] justify-around flex`}>
+                                        {/* @ts-ignore */}
+                                        <p className="text-secondary-foreground font-bold pl-[1%] text-xl mt-[4%]" onClick={() =>   handleItemClick(index,item.name)}  >{item.name}</p>
+                                    </div>
+                                    
+                                    </>
+                                ))}
+                            </DialogDescription>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
+                
+                {workoutData.length > 0 ? ( 
+                    workoutData.map(mappaWorkout)
+                ) : (
+                    <></>
+                ) }
             </div>
             <Navbar />
         </>

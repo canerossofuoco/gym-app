@@ -206,25 +206,32 @@
         echo json_encode($res);
     }
     
-    function requestWorkout() { //works
+    function requestWorkout() {
         global $conn;
-        $res = array("array risposta" => "requestWorkout");
-        if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
-            $res["login"] = true;
-            $res["workouts"] = "[";
+        $response = array("array risposta" => "requestWorkout");
+    
+        if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
+            $response["login"] = true;
+            $response["workouts"] = array(); // Array per i workouts
+    
             $email = $_POST["cookie_email"];
-            $query = "select * from workouts where email_utente='$email';";
+            $query = "SELECT * FROM workouts WHERE email_utente='$email';";
             $result_query = $conn->query($query);
-            if($result_query->num_rows>0) {
-                while($row=$result_query->fetch_assoc()) { //da verificare questa cosa
-                    $res["workouts"].= /* "'id':".$row["id"].",'nome':".$row["nome"].",'email_utente':".$row["email_utente"]; */ json_encode($row);
+    
+            if ($result_query->num_rows > 0) {
+                while ($row = $result_query->fetch_assoc()) {
+                    // Aggiungi il workout al array di workouts
+                    $response["workouts"][] = $row;
                 }
-                $res["workouts"].="]";
             }
-        }else 
-            $res["login"] = false;
-        echo json_encode($res); 
+        } else {
+            $response["login"] = false;
+        }
+    
+        // Codifica l'intera risposta in JSON e stampa
+        echo json_encode($response);
     }
+    
 
     function modifyExercise() {  //works
         global $conn;
