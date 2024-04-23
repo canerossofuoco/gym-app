@@ -8,6 +8,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import CaloriesPage from './pages/caloriesPage';
 import { loginUser } from './scripts/fetch';
 import { useEffect, useState } from 'react';
+import Workouts from './pages/Workouts';
 
 async function login () {
   var cookie_id = localStorage.getItem("cookie_id");
@@ -40,6 +41,7 @@ const App = () => {
           <Route path="/training" element={<Training />} />
           <Route path="/caloriespage" element={<CaloriesPage />} />
           <Route path="*" element={<Home />} />
+          <Route path="workouts" element={<Workouts/>} />
         </>
       ) : (
         <>
