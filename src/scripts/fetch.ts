@@ -1,7 +1,7 @@
 
 import axios, { AxiosResponse } from "axios";
 
-const urlServer = "http://172.20.10.8:80/index.php";
+const urlServer = "http://localhost:80/index.php";
 const qs = require('qs');
 export async function addFood(id: any, email: any, c: any, p: any, f: any, calories:any) {
     let res: any;
@@ -174,6 +174,26 @@ export async function modifyExercise(id: any, email: any, n_e: string, s_p: stri
     };
 
     await axios.post(urlServer + "/modify/exercise", qs.stringify(data))
+        .then((response: AxiosResponse) => {
+            res = response.data;
+        })
+        .catch((error: any) => {
+            console.error("Errore durante la richiesta:", error);
+        });
+
+    return res;
+}
+
+export async function requestExercises(id: any, email: any, nome:any) {
+    let res: any;
+
+    const data = {
+        cookie_id: "" + id,
+        cookie_email: "" + email,
+        nome_workout: "" + nome
+    };
+
+    await axios.post(urlServer + "/request/exercises", qs.stringify(data))
         .then((response: AxiosResponse) => {
             res = response.data;
         })

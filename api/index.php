@@ -9,7 +9,8 @@
         '/add/exercise/workout' => 'addExerciseToWorkout',
         '/request/profile' => 'requestProfile',
         '/request/workout' => 'requestWorkout',
-        '/modify/exercise' => 'modifyExercise'
+        '/modify/exercise' => 'modifyExercise',
+        '/request/exercises' => 'requestExercises'
     );
 
     $url =  $_SERVER['PHP_SELF'];
@@ -257,4 +258,44 @@
         echo json_encode($res);
     }
 
+    function requestExercises() {
+        global $conn;
+        $res = array("array risposta" => "requestExercises");
+        
+        if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
+            $res["login"] = true;
+            $email = $_POST["cookie_email"];
+            $nomeWorkout = $_POST["nome_workout"]; 
+            
+            $query = "SELECT e.* 
+            FROM esercizi e
+            INNER JOIN esercizi_workouts ew ON e.id = ew.id_esercizio
+            INNER JOIN workouts w ON ew.id_workout = w.id
+            WHERE w.nome = '$nomeWorkout' AND w.email_utente = '$email';";
+            $result_query = $conn->query($query);
+            
+            if ($result_query->num_rows > 0) {
+                $exercises = array();
+
+                while ($row = $result_query->fetch_assoc()) {
+                    $exercise = array(
+                        "id" => $row["id"],
+                        "nome" => $row["nome"],
+                        "email_utente" => $row["email_utente"],
+                        "stringa_peso" => $row["stringa_peso"]
+                    );
+                    $exercises[] = $exercise;
+                }
+    
+                $res["exercises"] = $exercises;
+            } else {
+                $res["exercises"] = "null";
+            }
+        } else {
+            $res["login"] = false;
+        }
+        
+        echo json_encode($res);
+    }
+    
 ?>
