@@ -13,6 +13,7 @@ import { Input } from "../components/input"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { addExercise,addExerciseToWorkout,addWorkout,requestWorkout } from "../scripts/fetch";
+import { useNavigate } from "react-router-dom";
 
 function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
@@ -21,6 +22,8 @@ function delay(ms: number) {
 function Training () {
 
     const [workoutData, setWorkoutData] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log("reload")
@@ -84,7 +87,12 @@ function Training () {
             <>
             <div className={`h-[10%] border rounded-xl bg-secondary mt-[4%] justify-around flex `}>
                 {/* @ts-ignore */}
-                <p className="text-secondary-foreground font-bold pl-[1%] text-xl mt-[4%]" onClick={navigate("/workouts")} >{item.nome}</p>
+                <p className="text-secondary-foreground font-bold pl-[1%] text-xl mt-[4%]" 
+                onClick={() => {
+                    navigate("/workouts",{state:{nome: item.nome}});
+                    } 
+                }
+                >{item.nome}</p>
             </div>
             </>
         );
@@ -109,9 +117,9 @@ function Training () {
                                         for (let index = 0; index < clickedExercises.length; index++) {
                                             await addExercise(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises[index]);
                                             res = await addExerciseToWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname,clickedExercises[index]);
-                                            if(res["inserimento"]) 
-                                                alert("aggiunto")
                                         }
+                                        if(res["inserimento"]) 
+                                            alert("aggiunto")
                                     }
                                 }}>Done</Button>
                             </DialogTitle>
