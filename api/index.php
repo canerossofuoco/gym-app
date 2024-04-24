@@ -10,7 +10,9 @@
         '/request/profile' => 'requestProfile',
         '/request/workout' => 'requestWorkout',
         '/modify/exercise' => 'modifyExercise',
-        '/request/exercises' => 'requestExercises'
+        '/request/exercises' => 'requestExercises',
+        '/request/exercise/set' => 'getExerciseSets',
+        '/add/exercise/set' => 'insertExerciseSet'
     );
 
     $url =  $_SERVER['PHP_SELF'];
@@ -29,7 +31,7 @@
         $functionName = $routes[$url];
         call_user_func($functionName);
     } else 
-        echo "Errore 404: Pagina non trovata";
+        echo "diocane";
 
     function addFood() { //works
         global $conn;
@@ -136,7 +138,7 @@
             $res["login"] = true;
             $nome = $_POST["nome"];
             $email = $_POST["cookie_email"];
-            $query = "insert into esercizi (nome,email_utente,peso) values('$nome','$email','');";
+            $query = "insert into esercizi (nome,email_utente) values('$nome','$email');";
             $result_query = $conn->query($query);
             if($result_query)
                 $res["inserimento"] = true;
@@ -160,6 +162,7 @@
             $nome_esercizio = $_POST["nome_esercizio"];
 
             $query = "select * from workouts where nome='$nome' and email_utente='$email';";  //seleziono id workout
+            
             $res_query = $conn->query($query);
             if($res_query->num_rows==1) {
                 $row = $res_query->fetch_assoc();
@@ -167,6 +170,7 @@
             }
 
             $query = "select * from esercizi where nome='$nome_esercizio' and email_utente='$email';"; //seleziono id esercizio
+            
             $res_query = $conn->query($query);
             if($res_query->num_rows==1) {
                 $row = $res_query->fetch_assoc();
@@ -174,6 +178,7 @@
             }
             
             $query = "insert into esercizi_workouts values($idw,$ide);"; //inserimento associazione workout-esercizio
+            
             $res_query = $conn->query($query);
             if($res_query)
                 $res["inserimento"]  = true;
@@ -282,7 +287,6 @@
                         "id" => $row["id"],
                         "nome" => $row["nome"],
                         "email_utente" => $row["email_utente"],
-                        "peso" => $row["peso"]
                     );
                     $exercises[] = $exercise;
                 }
@@ -297,5 +301,84 @@
         
         echo json_encode($res);
     }
+
+    function insertExerciseSet() {
+        global $conn;
+        $res = array("array risposta" => "insertExerciseSet");
     
+        
+        if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
+            $res["login"] = true;
+            $email = $_POST["cookie_email"];
+            $nomeEsercizio = $_POST["nome_esercizio"];
+            $numSet = $_POST["num_set"];
+            $peso = $_POST["peso"];
+    
+            $queryCheckEsercizio = "SELECT id FROM esercizi WHERE nome = '$nomeEsercizio' AND email_utente = '$email';";
+            $resultCheckEsercizio = $conn->query($queryCheckEsercizio);
+    
+            if ($resultCheckEsercizio->num_rows > 0) {
+                $rowEsercizio = $resultCheckEsercizio->fetch_assoc();
+                $idEsercizio = $rowEsercizio["id"];
+
+                $queryInsertSet = "INSERT INTO sets (num_set, nome_esercizio, email_utente, peso)
+                                   VALUES ($numSet, '$nomeEsercizio', '$email', $peso);";
+    
+                if ($conn->query($queryInsertSet) === TRUE) {
+                    $res["inserimento"] = true;
+                } else {
+                    $res["inserimento"] = false;
+                }
+            } else {
+                $res["esercizio_non_trovato"] = true;
+            }
+        } else {
+            $res["login"] = false;
+        }
+    
+        echo json_encode($res);
+    }
+
+
+    function getExerciseSets() {
+        global $conn;
+        $res = array("array risposta" => "getExerciseSets");
+    
+        // Verifica cookie per autenticazione
+        if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
+            $res["login"] = true;
+            $email = $_POST["cookie_email"];
+            $nomeEsercizio = $_POST["nome_esercizio"];
+    
+            // Query per ottenere tutti i set di un determinato esercizio per un utente
+            $queryGetSets = "SELECT num_set, peso
+                             FROM sets
+                             WHERE nome_esercizio = '$nomeEsercizio' AND email_utente = '$email'
+                             ORDER BY num_set ASC;";
+    
+            $resultGetSets = $conn->query($queryGetSets);
+    
+            if ($resultGetSets->num_rows > 0) {
+                $exerciseSets = array();
+    
+                // Itera sui risultati della query per ottenere i set
+                while ($rowSet = $resultGetSets->fetch_assoc()) {
+                    $set = array(
+                        "num_set" => $rowSet["num_set"],
+                        "peso" => $rowSet["peso"]
+                    );
+                    $exerciseSets[] = $set;
+                }
+    
+                $res["exercise_sets"] = $exerciseSets;
+            } else {
+                $res["exercise_sets"] = "null";
+            }
+        } else {
+            $res["login"] = false;
+        }
+    
+        echo json_encode($res);
+    }
+      
 ?>

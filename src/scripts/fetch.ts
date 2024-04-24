@@ -1,7 +1,7 @@
 
 import axios, { AxiosResponse } from "axios";
 
-const urlServer = "http://172.20.10.8:80/index.php";
+const urlServer = "http://localhost:80/index.php";
 const qs = require('qs');
 export async function addFood(id: any, email: any, c: any, p: any, f: any, calories:any) {
     let res: any;
@@ -203,3 +203,46 @@ export async function requestExercises(id: any, email: any, nome:any) {
 
     return res;
 }
+
+export async function insertExerciseSet(id: any, email: any, nomeEsercizio: any, numSet: any, peso: any) {
+    let res: any;
+
+    const data = {
+        cookie_id: "" + id,
+        cookie_email: "" + email,
+        nome_esercizio: "" + nomeEsercizio,
+        num_set: "" + numSet,
+        peso: "" + peso
+    };
+
+    await axios.post(urlServer + "/add/exercise/set", qs.stringify(data))
+        .then((response: AxiosResponse) => {
+            res = response.data;
+        })
+        .catch((error: any) => {
+            console.error("Errore durante la richiesta:", error);
+        });
+
+    return res;
+}
+
+export async function getExerciseSets(id: any, email: any, nomeEsercizio: any) {
+    let res: any;
+
+    const data = {
+        cookie_id: "" + id,
+        cookie_email: "" + email,
+        nome_esercizio: "" + nomeEsercizio
+    };
+
+    await axios.post(urlServer + "/request/exercise/sets", qs.stringify(data))
+        .then((response: AxiosResponse) => {
+            res = response.data;
+        })
+        .catch((error: any) => {
+            console.error("Errore durante la richiesta:", error);
+        });
+
+    return res;
+}
+

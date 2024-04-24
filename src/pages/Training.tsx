@@ -115,10 +115,9 @@ function Training () {
                                     if(workoutname!= "" && clickedExercises.length>0) {
                                         await addWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname)
                                         for (let index = 0; index < clickedExercises.length; index++) {
-                                            await addExercise(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises[index]);
+                                            res = await addExercise(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises[index]);
                                             res = await addExerciseToWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname,clickedExercises[index]);
                                         }
-                                        console.log(res);
                                         if(res["inserimento"]) 
                                             alert("aggiunto")
                                     }

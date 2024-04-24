@@ -21,6 +21,7 @@ const Form = ()=> {
     async function sendForm(e:any) {
         e.preventDefault();
         var res = await loginUser(null,null,pswValue,emailValue);
+        console.log(res);
         if(res["login"] && res["cookie_id"]!="" && res["cookie_email"]!="") {
             localStorage.setItem("cookie_id",res["cookie_id"]);
             localStorage.setItem("cookie_email",res["cookie_email"]);
