@@ -136,7 +136,7 @@
             $res["login"] = true;
             $nome = $_POST["nome"];
             $email = $_POST["cookie_email"];
-            $query = "insert into esercizi (nome,email_utente,stringa_peso) values('$nome','$email','');";
+            $query = "insert into esercizi (nome,email_utente,peso) values('$nome','$email','');";
             $result_query = $conn->query($query);
             if($result_query)
                 $res["inserimento"] = true;
@@ -198,7 +198,7 @@
                 $res["cognome"] = $row["cognome"];
                 $res["eta"] = $row["eta"];
                 $res["peso"] = $row["peso"];
-                $res["stringa_peso"] = $row["stringa_peso"];
+                $res["peso"] = $row["peso"];
                 $res["inserimento"] = true;
             }else
                 $res["inserimento"] = false;
@@ -241,11 +241,11 @@
             $res["login"] = true;
             $email = $_POST["cookie_email"];
             $nome = $_POST["nome_esercizio"];
-            $peso = $_POST["stringa_peso"];
+            $peso = $_POST["peso"];
             $query = "select * from esercizi where email_utente='$email' and nome='$nome';";
             $result_query = $conn->query($query);
             if($result_query->num_rows==1) {
-                $query = "update esercizi set stringa_peso='$peso' where email_utente='$email' and nome='$nome';";
+                $query = "update esercizi set peso='$peso' where email_utente='$email' and nome='$nome';";
                 $result_query = $conn->query($query);
                 if($result_query) 
                     $res["inserimento"] = true;
@@ -282,7 +282,7 @@
                         "id" => $row["id"],
                         "nome" => $row["nome"],
                         "email_utente" => $row["email_utente"],
-                        "stringa_peso" => $row["stringa_peso"]
+                        "peso" => $row["peso"]
                     );
                     $exercises[] = $exercise;
                 }

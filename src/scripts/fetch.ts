@@ -1,7 +1,7 @@
 
 import axios, { AxiosResponse } from "axios";
 
-const urlServer = "http://localhost:80/index.php";
+const urlServer = "http://172.20.10.8:80/index.php";
 const qs = require('qs');
 export async function addFood(id: any, email: any, c: any, p: any, f: any, calories:any) {
     let res: any;
@@ -170,7 +170,7 @@ export async function modifyExercise(id: any, email: any, n_e: string, s_p: stri
         cookie_id: "" + id,
         cookie_email: "" + email,
         nome_esercizio: n_e,
-        stringa_peso: s_p
+        peso: s_p
     };
 
     await axios.post(urlServer + "/modify/exercise", qs.stringify(data))

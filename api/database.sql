@@ -17,7 +17,7 @@ create table esercizi(
     id int AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50),
     email_utente VARCHAR(50),
-    stringa_peso varchar(1000)
+    peso varchar(1000)
 );
 
 create table dati_kcal(
@@ -59,7 +59,7 @@ ALTER TABLE esercizi_workouts ADD CONSTRAINT fk_idesercizio FOREIGN KEY (id_eser
 
 
 INSERT INTO utenti (email, nome, cognome, eta, psw, peso,stringa_peso) VALUES ('utente1@example.com', 'Mario', 'Rossi', 30, 'password1', 70,'70kg'),('utente2@example.com', 'Laura', 'Bianchi', 25, 'password2', 65,'65kg');
-INSERT INTO esercizi (nome, email_utente, stringa_peso) VALUES ('Corsa', 'utente1@example.com', '3kg'),('Sollevamento pesi', 'utente2@example.com', '10kg');
+INSERT INTO esercizi (nome, email_utente, peso) VALUES ('Corsa', 'utente1@example.com', '3kg'),('Sollevamento pesi', 'utente2@example.com', '10kg');
 INSERT INTO dati_kcal (gCarboidrati, gProteine, gGrassi, email_utente, giorno) VALUES (200, 80, 50, 'utente1@example.com', '2024-01-31'),(150, 70, 60, 'utente2@example.com', '2024-01-30');
 INSERT INTO cookie (id, email_utente) VALUES (1, 'utente1@example.com'),(2, 'utente2@example.com');
 INSERT INTO workouts (nome, email_utente) VALUES ('Allenamento cardio', 'utente1@example.com'),('Sollevamento pesi', 'utente2@example.com');
