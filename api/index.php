@@ -11,7 +11,7 @@
         '/request/workout' => 'requestWorkout',
         '/modify/exercise' => 'modifyExercise',
         '/request/exercises' => 'requestExercises',
-        '/request/exercise/set' => 'getExerciseSets',
+        '/request/exercise/sets' => 'getExerciseSets',
         '/add/exercise/set' => 'insertExerciseSet'
     );
 
@@ -31,7 +31,7 @@
         $functionName = $routes[$url];
         call_user_func($functionName);
     } else 
-        echo "diocane";
+        echo "pagina non trovata";
 
     function addFood() { //works
         global $conn;
@@ -352,12 +352,10 @@
     
             // Query per ottenere tutti i set di un determinato esercizio per un utente
             $queryGetSets = "SELECT num_set, peso
-                             FROM sets
+                             FROM setss
                              WHERE nome_esercizio = '$nomeEsercizio' AND email_utente = '$email'
                              ORDER BY num_set ASC;";
-    
             $resultGetSets = $conn->query($queryGetSets);
-    
             if ($resultGetSets->num_rows > 0) {
                 $exerciseSets = array();
     

@@ -1,10 +1,38 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../components/input"
-
+import { getExerciseSets } from "../scripts/fetch";
+import { Await } from "react-router-dom";
 
 function ExerciseTable(props:any) {
 
+    
+    const [setsArray, setSetsArray] = useState({});  
+    
+    useEffect(()=> {
+        console.log("reloadTable")
+        const fetchData = async () => {
+            //@ts-ignore
+            var res;
+            var temp:string = "";
+            for (let index = 0; index < props.exArr.length; index++) {
+                res = await getExerciseSets(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),props.exArr[index].nome);
+                temp = props.exArr[index].nome;
+                setSetsArray(prevState => ({
+                    ...prevState,
+                    //@ts-ignore
+                    [temp]: res
+                }));
+            }
+            //console.log("sono dentro"+setsArray);
+          }
+        
+          
+          fetchData()
+            .catch(console.error);
+    }, []);
+
     function mapExercises(item:any) {
+        console.log(setsArray);
         return (
             <>
             <div className="border rounded-xl bg-secondary">  
