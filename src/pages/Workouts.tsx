@@ -13,7 +13,7 @@ function Workouts() {
     const [exercisesArray, setExerciseArray] = useState([]);
 
     useEffect(() => {
-        console.log("reload")
+        console.log("reloadWorkout")
         getExercises();
     }, []);
 
@@ -24,9 +24,9 @@ function Workouts() {
         var res = await requestExercises(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),location.state.nome);
         res = res["exercises"];
         setExerciseArray(res);
-        console.log(res);
+        console.log(exercisesArray);
     }
-
+    console.log(exercisesArray) //giusto
     return (
         <>
         <div id="workoutDiv" className="h-[91%] overflow-x-hidden overflow-y-auto p-2">

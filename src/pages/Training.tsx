@@ -118,8 +118,10 @@ function Training () {
                                             res = await addExercise(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises[index]);
                                             res = await addExerciseToWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname,clickedExercises[index]);
                                         }
-                                        if(res["inserimento"]) 
-                                            alert("aggiunto")
+                                        if(res["inserimento"]) {
+                                            alert("aggiunto");
+                                            navigate("/");
+                                        } 
                                     }
                                 }}>Done</Button>
                             </DialogTitle>

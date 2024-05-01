@@ -65,7 +65,7 @@ CREATE TABLE setss (
     peso FLOAT,
     PRIMARY KEY (nome_esercizio, email_utente, num_set)
 );
---FOREIGN KEY (nome_esercizio, email_utente) REFERENCES esercizi(nome, email_utente)
+
 -- Aggiunta dei vincoli di chiave esterna per utenti e relazioni tra tabelle
 ALTER TABLE utenti ADD CONSTRAINT fk_dati_kcal FOREIGN KEY (id_dati) REFERENCES dati_kcal(id);
 ALTER TABLE esercizi_workouts ADD CONSTRAINT fk_idworkout FOREIGN KEY (id_workout) REFERENCES workouts(id);
@@ -76,8 +76,7 @@ ALTER TABLE esercizi ADD CONSTRAINT fk_email_esercizi FOREIGN KEY (email_utente)
 ALTER TABLE dati_kcal ADD CONSTRAINT fk_email_datikcal FOREIGN KEY (email_utente) REFERENCES utenti(email);
 ALTER TABLE cookie ADD CONSTRAINT fk_email_cookie FOREIGN KEY (email_utente) REFERENCES utenti(email);
 ALTER TABLE workouts ADD CONSTRAINT fk_email_workouts FOREIGN KEY (email_utente) REFERENCES utenti(email);
---ALTER TABLE setss ADD CONSTRAINT fk_sets_esercizi FOREIGN KEY (nome_esercizio) REFERENCES esercizi(nome);
---ALTER TABLE setss ADD CONSTRAINT fk_sets_email_utente FOREIGN KEY (email_utente) REFERENCES utenti(email);
+
 
 
 -- Inserimento di record nella tabella 'utenti'

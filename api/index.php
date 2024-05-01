@@ -340,7 +340,7 @@
     }
 
 
-    function getExerciseSets() {
+    function getExerciseSets() { //
         global $conn;
         $res = array("array risposta" => "getExerciseSets");
     
@@ -351,11 +351,12 @@
             $nomeEsercizio = $_POST["nome_esercizio"];
     
             // Query per ottenere tutti i set di un determinato esercizio per un utente
-            $queryGetSets = "SELECT num_set, peso
+            $queryGetSets = "SELECT nome_esercizio,num_set, peso
                              FROM setss
                              WHERE nome_esercizio = '$nomeEsercizio' AND email_utente = '$email'
                              ORDER BY num_set ASC;";
             $resultGetSets = $conn->query($queryGetSets);
+            $res["nome"] = $nomeEsercizio;
             if ($resultGetSets->num_rows > 0) {
                 $exerciseSets = array();
     
@@ -367,7 +368,6 @@
                     );
                     $exerciseSets[] = $set;
                 }
-    
                 $res["exercise_sets"] = $exerciseSets;
             } else {
                 $res["exercise_sets"] = "null";
