@@ -345,36 +345,32 @@
         $res = array("array risposta" => "getExerciseSets");
     
         // Verifica cookie per autenticazione
-        if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
+        //if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
             $res["login"] = true;
             $email = $_POST["cookie_email"];
-            $nomeEsercizio = $_POST["nome_esercizio"];
-    
-            // Query per ottenere tutti i set di un determinato esercizio per un utente
-            $queryGetSets = "SELECT nome_esercizio,num_set, peso
+            $nomeEsercizi = str_getcsv($_POST["nome_esercizio"]);
+        
+            // Costruisci la parte della query per la clausola IN con tutti gli esercizi specificati
+            $eserciziCondizione = implode(', ', array_map(function($nome) {
+                return "'$nome'";
+            }, $nomeEsercizi));
+        
+            // Query per ottenere tutti i set di esercizi specificati per un utente
+            $queryGetSets = "SELECT nome_esercizio, num_set, peso
                              FROM setss
-                             WHERE nome_esercizio = '$nomeEsercizio' AND email_utente = '$email'
-                             ORDER BY num_set ASC;";
+                             WHERE nome_esercizio IN ($eserciziCondizione) AND email_utente = '$email'
+                             ORDER BY nome_esercizio, num_set ASC;";
             $resultGetSets = $conn->query($queryGetSets);
-            $res["nome"] = $nomeEsercizio;
-            if ($resultGetSets->num_rows > 0) {
-                $exerciseSets = array();
-    
-                // Itera sui risultati della query per ottenere i set
-                while ($rowSet = $resultGetSets->fetch_assoc()) {
-                    $set = array(
-                        "num_set" => $rowSet["num_set"],
-                        "peso" => $rowSet["peso"]
-                    );
-                    $exerciseSets[] = $set;
+            $res["array"] = array();    
+            if($resultGetSets->num_rows>0) {
+                while($row = $resultGetSets->fetch_assoc()) {
+                    array_push($res["array"],$row);
                 }
-                $res["exercise_sets"] = $exerciseSets;
-            } else {
-                $res["exercise_sets"] = "null";
             }
-        } else {
-            $res["login"] = false;
-        }
+            //$res["array"] = $resultGetSets;
+        // } else {
+        //     $res["login"] = false;
+        // }
     
         echo json_encode($res);
     }
