@@ -272,22 +272,33 @@
             $email = $_POST["cookie_email"];
             $nomeWorkout = $_POST["nome_workout"]; 
             
-            $query = "SELECT e.* 
+            $query = "SELECT e.nome, GROUP_CONCAT(setss.num_set ORDER BY setss.num_set ASC) AS num_set, GROUP_CONCAT(setss.peso ORDER BY setss.num_set ASC) AS peso
             FROM esercizi e
             INNER JOIN esercizi_workouts ew ON e.id = ew.id_esercizio
             INNER JOIN workouts w ON ew.id_workout = w.id
-            WHERE w.nome = '$nomeWorkout' AND w.email_utente = '$email';";
+            LEFT JOIN setss ON nome_esercizio = e.nome
+            WHERE w.nome = '$nomeWorkout' AND w.email_utente = '$email'
+            GROUP BY e.nome;
+            ";
             $result_query = $conn->query($query);
-            
             if ($result_query->num_rows > 0) {
                 $exercises = array();
 
                 while ($row = $result_query->fetch_assoc()) {
-                    $exercise = array(
-                        "id" => $row["id"],
-                        "nome" => $row["nome"],
-                        "email_utente" => $row["email_utente"],
-                    );
+                    if($row["num_set"]!=null && $row["peso"]!=null) {
+                        $exercise = array(
+                            "nome" => $row["nome"],
+                            "num_set" => str_getcsv($row["num_set"]),
+                            "peso" => str_getcsv($row["peso"])
+                        );
+                    }
+                    else {
+                        $exercise = array(
+                            "nome" => $row["nome"],
+                            "num_set" => null,
+                            "peso" => null
+                        );
+                    }
                     $exercises[] = $exercise;
                 }
     
@@ -338,41 +349,4 @@
     
         echo json_encode($res);
     }
-
-
-    function getExerciseSets() { //
-        global $conn;
-        $res = array("array risposta" => "getExerciseSets");
-    
-        // Verifica cookie per autenticazione
-        //if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
-            $res["login"] = true;
-            $email = $_POST["cookie_email"];
-            $nomeEsercizi = str_getcsv($_POST["nome_esercizio"]);
-        
-            // Costruisci la parte della query per la clausola IN con tutti gli esercizi specificati
-            $eserciziCondizione = implode(', ', array_map(function($nome) {
-                return "'$nome'";
-            }, $nomeEsercizi));
-        
-            // Query per ottenere tutti i set di esercizi specificati per un utente
-            $queryGetSets = "SELECT nome_esercizio, num_set, peso
-                             FROM setss
-                             WHERE nome_esercizio IN ($eserciziCondizione) AND email_utente = '$email'
-                             ORDER BY nome_esercizio, num_set ASC;";
-            $resultGetSets = $conn->query($queryGetSets);
-            $res["array"] = array();    
-            if($resultGetSets->num_rows>0) {
-                while($row = $resultGetSets->fetch_assoc()) {
-                    array_push($res["array"],$row);
-                }
-            }
-            //$res["array"] = $resultGetSets;
-        // } else {
-        //     $res["login"] = false;
-        // }
-    
-        echo json_encode($res);
-    }
-      
 ?>
