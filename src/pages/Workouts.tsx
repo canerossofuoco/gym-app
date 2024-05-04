@@ -11,7 +11,11 @@ function Workouts() {
     const navigate = useNavigate();
     const location = useLocation();
     const [exerciseArray, setExerciseArray] = useState([]);
-    
+    const [showTimer, setShowTimer] = useState(false);
+    const [hours, setHours] = useState(0);
+    const [minutes, setMinutes] = useState(0);
+    const [seconds, setSeconds] = useState(0);
+
     useEffect(() => {
         console.log("reloadWorkout")
         
@@ -20,6 +24,21 @@ function Workouts() {
         })
     }, []);
 
+    useEffect(() => {
+        if (showTimer) {
+          const timerInterval = setInterval(() => {
+            setSeconds((prevSeconds) => prevSeconds === 59 ? 0 : prevSeconds + 1);
+            if (seconds === 59) {
+              setMinutes((prevMinutes) => prevMinutes === 59 ? 0 : prevMinutes + 1);
+              if (minutes === 59) {
+                setHours((prevHours) => prevHours + 1);
+              }
+            }
+          }, 1000);
+    
+          return () => clearInterval(timerInterval);
+        }
+      }, [showTimer, hours, minutes, seconds]);
 
     async function getExercises() {
         var res = await requestExercises(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),location.state.nome);
@@ -49,6 +68,10 @@ function Workouts() {
     
         return result;
     }
+
+    const startTimer = () => {
+        setShowTimer(true);
+      };
 
     function mapExercises(item:any,index:any) {
         
@@ -99,9 +122,19 @@ function Workouts() {
     return (
         <>
         <div id="workoutDiv" className="h-[91%] overflow-x-hidden overflow-y-auto p-2">
-            <div className="flex h-[20%] rounded-xl justify-between">
+            <div className="flex h-[15%] rounded-xl justify-between ">
                 <h1 className="text-4xl font-bold tracking-tight p-[10%]">{location.state.nome}</h1>
                 <img className={cssImg+" mt-[4%] "} src="/images/cross.png" onClick={()=>navigate("/")}/>
+            </div>
+            <div className="h-[10%]">
+                <div className="">
+                {!showTimer ? (
+                    <Button className="relative left-[35%] w-[30%]" onClick={startTimer}>Start workout</Button>
+                    ) : (
+                    <p className="relative left-[32%] w-[45%] font-bold text-xl tracking-tight p-[10%]">{hours} : {minutes} : {seconds}</p>
+                    )
+                }
+                </div>
             </div>
             <div className="">
             {exerciseArray.length > 0  ? ( 
