@@ -12,7 +12,7 @@ function Workouts() {
     const location = useLocation();
     const [exerciseArray, setExerciseArray] = useState([]);
     const [showTimer, setShowTimer] = useState(false);
-    
+    const [reload, setReload] = useState(true);
 
     useEffect(() => {
         console.log("reloadWorkout")
@@ -74,6 +74,9 @@ function Workouts() {
             console.log(e.target.id);
             res = await insertExerciseSet(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),e.target.id,1,0,0)
             console.log(res);
+            getExercises().then(response => {
+                setExerciseArray(response);
+            })
         }
     }
 
