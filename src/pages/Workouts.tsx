@@ -18,10 +18,10 @@ function Workouts() {
 
     useEffect(() => {
         console.log("reloadWorkout")
-        
-        getExercises().then(response => {
-            setExerciseArray(response);
-        })
+        if(exerciseArray.keys.length === 0)
+            getExercises().then(response => {
+                setExerciseArray(response);
+            })
     }, []);
 
     useEffect(() => {
@@ -74,7 +74,6 @@ function Workouts() {
       };
 
     function mapExercises(item:any,index:any) {
-        
         var num = 0;
         if(item.peso!=null) 
             num = item.peso.length
@@ -82,6 +81,7 @@ function Workouts() {
 
         console.log(num);
         //console.log(item.nome+" "+num);
+        
         return (
             <>
             <div key={index}>
@@ -102,7 +102,8 @@ function Workouts() {
                                         <td className="font-bold text-center">{index+1}</td>
                                         <td className="font-bold text-center">{item+"Kg"}</td>
                                         <td><Input className="bg-background rounded-xl"/></td>
-                                        <td><Input className="bg-background rounded-xl"/></td>
+                                        {/*@ts-ignore*/}
+                                        <td><Input className="bg-background rounded-xl" onBlur={handleChange} /></td>
                                     </tr>
                                 )
                             })
@@ -116,7 +117,10 @@ function Workouts() {
             </div>
             </>
         );
-        
+    }
+
+    function handleChange(e:any) {
+        console.log(e.target.value);
     }
 
     return (
@@ -131,13 +135,16 @@ function Workouts() {
                 {!showTimer ? (
                     <Button className="relative left-[35%] w-[30%]" onClick={startTimer}>Start workout</Button>
                     ) : (
-                    <p className="relative left-[32%] w-[45%] font-bold text-xl tracking-tight p-[10%]">{hours} : {minutes} : {seconds}</p>
+                    <div className=" relative">
+                    <Button className="relative left-[35%] w-[30%]" onClick={ ()=>navigate("/") }>End workout</Button>
+                    <p className="relative left-[40%] w-[45%]  font-bold text-xl tracking-tight">{hours} : {minutes} : {seconds}</p>
+                    </div>
                     )
                 }
                 </div>
             </div>
             <div className="">
-            {exerciseArray.length > 0  ? ( 
+            {exerciseArray.length > 0 ? ( 
                 exerciseArray.map(mapExercises)
                 ) : (
                 <></>
