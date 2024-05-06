@@ -271,7 +271,7 @@
             $email = $_POST["cookie_email"];
             $nomeWorkout = $_POST["nome_workout"]; 
             
-            $query = "SELECT e.nome, GROUP_CONCAT(setss.num_set ORDER BY setss.num_set ASC) AS num_set, GROUP_CONCAT(setss.peso ORDER BY setss.num_set ASC) AS peso
+            $query = "SELECT e.nome, GROUP_CONCAT(setss.num_set , setss.repetitions ORDER BY setss.num_set ASC) AS num_set, GROUP_CONCAT(setss.peso ORDER BY setss.num_set ASC) AS peso, GROUP_CONCAT(setss.repetitions ORDER BY setss.num_set ASC) AS repetitions
             FROM esercizi e
             INNER JOIN esercizi_workouts ew ON e.id = ew.id_esercizio
             INNER JOIN workouts w ON ew.id_workout = w.id
@@ -284,18 +284,20 @@
                 $exercises = array();
 
                 while ($row = $result_query->fetch_assoc()) {
-                    if($row["num_set"]!=null && $row["peso"]!=null) {
+                    if($row["num_set"]!=null && $row["peso"]!=null && $row["repetitions"]!=null) {
                         $exercise = array(
                             "nome" => $row["nome"],
                             "num_set" => str_getcsv($row["num_set"]),
-                            "peso" => str_getcsv($row["peso"])
+                            "peso" => str_getcsv($row["peso"]),
+                            "reps" => str_getcsv($row["repetitions"])
                         );
                     }
                     else {
                         $exercise = array(
                             "nome" => $row["nome"],
                             "num_set" => null,
-                            "peso" => null
+                            "peso" => null,
+                            "reps" => null
                         );
                     }
                     $exercises[] = $exercise;
@@ -303,7 +305,7 @@
     
                 $res["exercises"] = $exercises;
             } else {
-                $res["exercises"] = "null";
+                $res["exercises"] = null;
             }
         } else {
             $res["login"] = false;
@@ -323,28 +325,37 @@
             $nomeEsercizio = $_POST["nome_esercizio"];
             $numSet = $_POST["num_set"];
             $peso = $_POST["peso"];
-    
-            $queryCheckEsercizio = "SELECT id FROM esercizi WHERE nome = '$nomeEsercizio' AND email_utente = '$email';";
-            $resultCheckEsercizio = $conn->query($queryCheckEsercizio);
-    
-            if ($resultCheckEsercizio->num_rows > 0) {
-                $rowEsercizio = $resultCheckEsercizio->fetch_assoc();
-                $idEsercizio = $rowEsercizio["id"];
-
-                $queryInsertSet = "UPDATE setss set peso = $peso where num_set = $numSet AND nome_esercizio= '$nomeEsercizio' AND email_utente = '$email'; ";
-                $res["cacca"] = $queryInsertSet;
-                if ($conn->query($queryInsertSet) === TRUE) {
+            $repetitions = $_POST["repetitions"];
+            if($peso !=0 && $repetitions!=0) {
+                $queryInsertSet = "UPDATE setss set peso = $peso, repetitions= $repetitions where num_set = $numSet AND nome_esercizio= '$nomeEsercizio' AND email_utente = '$email';";
+                echo $queryInsertSet;
+                if ($conn->query($queryInsertSet)) {
                     $res["inserimento"] = true;
                 } else {
                     $res["inserimento"] = false;
                 }
             } else {
-                $res["esercizio_non_trovato"] = true;
+                $sql = "SELECT MAX(num_set) AS ultimo_set FROM setss 
+                        WHERE nome_esercizio = '$nomeEsercizio' AND email_utente = '$email'";
+
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $ultimo_set = $row["ultimo_set"] + 1;
+                }else 
+                    $ultimo_set = 1;
+                
+                $queryInsertSet = "INSERT INTO setss(nome_esercizio, email_utente, num_set, peso, repetitions) values('$nomeEsercizio', '$email', $ultimo_set, $peso, $repetitions);";
+                echo $queryInsertSet;
+                if ($conn->query($queryInsertSet)) {
+                    $res["inserimento"] = true;
+                } else {
+                    $res["inserimento"] = false;
+                }
             }
-        } else {
+        }else 
             $res["login"] = false;
-        }
-    
         echo json_encode($res);
     }
 ?>

@@ -204,7 +204,7 @@ export async function requestExercises(id: any, email: any, nome:any) {
     return res;
 }
 
-export async function insertExerciseSet(id: any, email: any, nomeEsercizio: any, numSet: any, peso: any) {
+export async function insertExerciseSet(id: any, email: any, nomeEsercizio: any, numSet: any, peso: any, repetitions:any) {
     let res: any;
 
     const data = {
@@ -212,7 +212,8 @@ export async function insertExerciseSet(id: any, email: any, nomeEsercizio: any,
         cookie_email: "" + email,
         nome_esercizio: "" + nomeEsercizio,
         num_set: "" + numSet,
-        peso: "" + peso
+        peso: "" + peso,
+        repetitions: "" + repetitions
     };
 
     await axios.post(urlServer + "/add/exercise/set", qs.stringify(data))

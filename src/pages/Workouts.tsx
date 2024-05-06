@@ -25,6 +25,7 @@ function Workouts() {
 
     async function getExercises() {
         var res = await requestExercises(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),location.state.nome);
+        console.log(res);
         return res["exercises"];
     }
 
@@ -33,19 +34,13 @@ function Workouts() {
 
 
     function parseCSV(csvString:any) {
-        // Separiamo la stringa CSV in righe
         const rows = csvString.split('\n');
         
-        // Inizializziamo un array per contenere i risultati
         const result:any = [];
     
-        // Iteriamo attraverso ogni riga
         //@ts-ignore
         rows.forEach(row => {
-            // Separiamo la riga in colonne
             const columns = row.split(',');
-            
-            // Aggiungiamo le colonne all'array dei risultati
             result.push(columns);
         });
     
@@ -58,12 +53,28 @@ function Workouts() {
 
     
     async function sendSet(e:any) {
+        console.log("no")
         var res;
-        var array = parseCSV(e.target.id)
-        //@ts-ignore
-        var weightLifted = document.getElementById(""+array[0][0]+","+array[0][1]+",peso").value;
-        res = await insertExerciseSet(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),array[0][1],array[0][0],weightLifted)
-        console.log(res);
+        if(showTimer) {
+            var array = parseCSV(e.target.id)
+            //@ts-ignore
+            var weightLifted = document.getElementById(""+array[0][0]+","+array[0][1]+",peso").value;
+            //@ts-ignore
+            var repetitions  = document.getElementById(""+array[0][0]+","+array[0][1]+",reps").value;
+
+            res = await insertExerciseSet(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),array[0][1],array[0][0],weightLifted,repetitions)
+            console.log(res);
+        }  
+    }
+
+    async function insertSetDefault(e:any) {
+        console.log("default")
+        var res;
+        if(showTimer) {
+            console.log(e.target.id);
+            res = await insertExerciseSet(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),e.target.id,1,0,0)
+            console.log(res);
+        }
     }
 
     function mapExercises(item:any,index:any) {
@@ -71,16 +82,16 @@ function Workouts() {
         var nome = item.nome
         if(item.peso!=null) 
             num = item.peso.length
-        console.log(item.nome+" "+item.peso);
-
-        console.log(num);
-        //console.log(item.nome+" "+num);
-        
+        console.log(item);
+        const array_reps = item.reps;
         return (
             <>
             <div key={index}>
                 <div className="border rounded-xl bg-secondary">  
-                    <p className="text-xl mb-2 font-bold text-left ml-[10%]">{item.nome}</p>
+                    <div className="flex justify-between">
+                        <p className="text-xl mb-2 font-bold text-left ml-[10%]">{item.nome}</p>
+                        <p className="text-xl mb-2 font-bold text-right p-[1%]" id ={item.nome} onClick={insertSetDefault}>+</p>
+                    </div>
                     <table className="w-full">
                         <tr className="w-[25%]">
                             <th className="font-bold text-xl m-[5%] w-[25%]">Set</th>
@@ -90,13 +101,13 @@ function Workouts() {
                         </tr>
                     {
                         num > 0  ? ( 
-                            parseCSV(""+item.peso)[0].map((item:any,index:any) => {
+                            item.peso.map((item:any,index:any) => {
                                 return (
                                     <tr>
                                         <td className="font-bold text-center">{index+1}</td>
                                         <td className="font-bold text-center">{item+"Kg"}</td>
                                         <td><Input className="bg-background rounded-xl" id={index+1+","+nome+",peso"}/></td>
-                                        <td><Input className="bg-background rounded-xl" id={index+1+","+nome+",reps"} onBlur={sendSet} /></td>
+                                        <td><Input className="bg-background rounded-xl" id={index+1+","+nome+",reps"} onBlur={sendSet} placeholder={array_reps[index]}/></td>
                                     </tr>
                                 )
                             })

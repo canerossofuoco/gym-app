@@ -63,6 +63,7 @@ CREATE TABLE setss (
     nome_esercizio VARCHAR(50),
     email_utente VARCHAR(100),
     peso FLOAT,
+    repetitions int,
     PRIMARY KEY (nome_esercizio, email_utente, num_set)
 );
 
@@ -134,10 +135,10 @@ VALUES
 (5, 5);
 
 -- Inserimento di record nella tabella 'sets'
-INSERT INTO setss (num_set, nome_esercizio, email_utente, peso)
+INSERT INTO setss (num_set, nome_esercizio, email_utente, peso,repetitions)
 VALUES
-(1, 'Sollevamento pesi', 'utente1@example.com', 20),
-(2, 'Addominali', 'utente2@example.com', 10),
-(3, 'Corsetta', 'utente3@example.com', NULL),
-(4, 'Panca piana', 'utente4@example.com', 30),
-(5, 'Squat', 'utente5@example.com', 40);
+(1, 'Sollevamento pesi', 'utente1@example.com', 20,4),
+(2, 'Addominali', 'utente2@example.com', 10,5),
+(3, 'Corsetta', 'utente3@example.com', NULL,6),
+(4, 'Panca piana', 'utente4@example.com', 30,7),
+(5, 'Squat', 'utente5@example.com', 40,8);
