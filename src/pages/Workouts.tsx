@@ -2,19 +2,17 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../components/button";
 import Navbar from "../components/navbar";
 import {useLocation} from 'react-router-dom';
-import { getExerciseSets, requestExercises } from "../scripts/fetch";
+import { requestExercises,insertExerciseSet } from "../scripts/fetch";
 import { useEffect, useState } from "react";
 import { Input } from "../components/input";
-import { number } from "zod";
+import Timer from "../components/Timer";
 
 function Workouts() {
     const navigate = useNavigate();
     const location = useLocation();
     const [exerciseArray, setExerciseArray] = useState([]);
     const [showTimer, setShowTimer] = useState(false);
-    const [hours, setHours] = useState(0);
-    const [minutes, setMinutes] = useState(0);
-    const [seconds, setSeconds] = useState(0);
+    
 
     useEffect(() => {
         console.log("reloadWorkout")
@@ -24,21 +22,6 @@ function Workouts() {
             })
     }, []);
 
-    useEffect(() => {
-        if (showTimer) {
-          const timerInterval = setInterval(() => {
-            setSeconds((prevSeconds) => prevSeconds === 59 ? 0 : prevSeconds + 1);
-            if (seconds === 59) {
-              setMinutes((prevMinutes) => prevMinutes === 59 ? 0 : prevMinutes + 1);
-              if (minutes === 59) {
-                setHours((prevHours) => prevHours + 1);
-              }
-            }
-          }, 1000);
-    
-          return () => clearInterval(timerInterval);
-        }
-      }, [showTimer, hours, minutes, seconds]);
 
     async function getExercises() {
         var res = await requestExercises(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),location.state.nome);
@@ -73,8 +56,19 @@ function Workouts() {
         setShowTimer(true);
       };
 
+    
+    async function sendSet(e:any) {
+        var res;
+        var array = parseCSV(e.target.id)
+        //@ts-ignore
+        var weightLifted = document.getElementById(""+array[0][0]+","+array[0][1]+",peso").value;
+        res = await insertExerciseSet(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),array[0][1],array[0][0],weightLifted)
+        console.log(res);
+    }
+
     function mapExercises(item:any,index:any) {
         var num = 0;
+        var nome = item.nome
         if(item.peso!=null) 
             num = item.peso.length
         console.log(item.nome+" "+item.peso);
@@ -101,9 +95,8 @@ function Workouts() {
                                     <tr>
                                         <td className="font-bold text-center">{index+1}</td>
                                         <td className="font-bold text-center">{item+"Kg"}</td>
-                                        <td><Input className="bg-background rounded-xl"/></td>
-                                        {/*@ts-ignore*/}
-                                        <td><Input className="bg-background rounded-xl" onBlur={handleChange} /></td>
+                                        <td><Input className="bg-background rounded-xl" id={index+1+","+nome+",peso"}/></td>
+                                        <td><Input className="bg-background rounded-xl" id={index+1+","+nome+",reps"} onBlur={sendSet} /></td>
                                     </tr>
                                 )
                             })
@@ -119,10 +112,6 @@ function Workouts() {
         );
     }
 
-    function handleChange(e:any) {
-        console.log(e.target.value);
-    }
-
     return (
         <>
         <div id="workoutDiv" className="h-[91%] overflow-x-hidden overflow-y-auto p-2">
@@ -135,10 +124,7 @@ function Workouts() {
                 {!showTimer ? (
                     <Button className="relative left-[35%] w-[30%]" onClick={startTimer}>Start workout</Button>
                     ) : (
-                    <div className=" relative">
-                    <Button className="relative left-[35%] w-[30%]" onClick={ ()=>navigate("/") }>End workout</Button>
-                    <p className="relative left-[40%] w-[45%]  font-bold text-xl tracking-tight">{hours} : {minutes} : {seconds}</p>
-                    </div>
+                    <Timer/>
                     )
                 }
                 </div>

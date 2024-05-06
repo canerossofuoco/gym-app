@@ -226,23 +226,3 @@ export async function insertExerciseSet(id: any, email: any, nomeEsercizio: any,
     return res;
 }
 
-export async function getExerciseSets(id: any, email: any, nomeEsercizio: any) {
-    let res: any;
-
-    const data = {
-        cookie_id: "" + id,
-        cookie_email: "" + email,
-        nome_esercizio: "" + nomeEsercizio
-    };
-
-    await axios.post(urlServer + "/request/exercise/sets", qs.stringify(data))
-        .then((response: AxiosResponse) => {
-            res = response.data;
-        })
-        .catch((error: any) => {
-            console.error("Errore durante la richiesta:", error);
-        });
-
-    return res;
-}
-

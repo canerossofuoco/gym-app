@@ -11,7 +11,6 @@
         '/request/workout' => 'requestWorkout',
         '/modify/exercise' => 'modifyExercise',
         '/request/exercises' => 'requestExercises',
-        '/request/exercise/sets' => 'getExerciseSets',
         '/add/exercise/set' => 'insertExerciseSet'
     );
 
@@ -332,9 +331,8 @@
                 $rowEsercizio = $resultCheckEsercizio->fetch_assoc();
                 $idEsercizio = $rowEsercizio["id"];
 
-                $queryInsertSet = "INSERT INTO sets (num_set, nome_esercizio, email_utente, peso)
-                                   VALUES ($numSet, '$nomeEsercizio', '$email', $peso);";
-    
+                $queryInsertSet = "UPDATE setss set peso = $peso where num_set = $numSet AND nome_esercizio= '$nomeEsercizio' AND email_utente = '$email'; ";
+                $res["cacca"] = $queryInsertSet;
                 if ($conn->query($queryInsertSet) === TRUE) {
                     $res["inserimento"] = true;
                 } else {
