@@ -271,14 +271,17 @@
             $email = $_POST["cookie_email"];
             $nomeWorkout = $_POST["nome_workout"]; 
             
-            $query = "SELECT e.nome, GROUP_CONCAT(setss.num_set , setss.repetitions ORDER BY setss.num_set ASC) AS num_set, GROUP_CONCAT(setss.peso ORDER BY setss.num_set ASC) AS peso, GROUP_CONCAT(setss.repetitions ORDER BY setss.num_set ASC) AS repetitions
-            FROM esercizi e
-            INNER JOIN esercizi_workouts ew ON e.id = ew.id_esercizio
-            INNER JOIN workouts w ON ew.id_workout = w.id
-            LEFT JOIN setss ON nome_esercizio = e.nome
-            WHERE w.nome = '$nomeWorkout' AND w.email_utente = '$email'
-            GROUP BY e.nome;
-            ";
+            $query = "SELECT e.nome, 
+                 GROUP_CONCAT(setss.num_set , setss.repetitions ORDER BY setss.num_set ASC) AS num_set, 
+                 GROUP_CONCAT(setss.peso ORDER BY setss.num_set ASC) AS peso, 
+                 GROUP_CONCAT(setss.repetitions ORDER BY setss.num_set ASC) AS repetitions
+          FROM esercizi e
+          INNER JOIN esercizi_workouts ew ON e.id = ew.id_esercizio
+          INNER JOIN workouts w ON ew.id_workout = w.id
+          LEFT JOIN setss ON setss.nome_esercizio = e.nome AND setss.email_utente = '$email'
+          WHERE w.nome = '$nomeWorkout' AND w.email_utente = '$email'
+          GROUP BY e.nome;";
+            
             $result_query = $conn->query($query);
             if ($result_query->num_rows > 0) {
                 $exercises = array();
@@ -321,12 +324,17 @@
         
         if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
             $res["login"] = true;
+            $exist = false;
             $email = $_POST["cookie_email"];
             $nomeEsercizio = $_POST["nome_esercizio"];
             $numSet = $_POST["num_set"];
             $peso = $_POST["peso"];
             $repetitions = $_POST["repetitions"];
-            if($peso !=0 && $repetitions!=0) {
+            $queryCheckExerciseExist = "select * from setss where nome_esercizio = '$nomeEsercizio' and email_utente='$email';";
+            if($conn->query($queryCheckExerciseExist)->num_rows >= 1) {
+                $exist = true;
+            }
+            if($peso !=0 && $repetitions!=0 && $exist) {
                 $queryInsertSet = "UPDATE setss set peso = $peso, repetitions= $repetitions where num_set = $numSet AND nome_esercizio= '$nomeEsercizio' AND email_utente = '$email';";
                 echo $queryInsertSet;
                 if ($conn->query($queryInsertSet)) {

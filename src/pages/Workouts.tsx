@@ -144,7 +144,7 @@ function Workouts() {
                 </div>
             </div>
             <div className="">
-            {exerciseArray.length > 0 ? ( 
+            {exerciseArray!=null && exerciseArray.length > 0 ? ( 
                 exerciseArray.map(mapExercises)
                 ) : (
                 <></>
