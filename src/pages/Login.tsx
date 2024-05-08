@@ -9,6 +9,8 @@ const Form = ()=> {
     const navigate = useNavigate();
     const [emailValue, setEmailValue] = useState('');
     const [pswValue, setPswValue] = useState('');
+    const [error,setError] = useState('');
+
 
     const handleEmail = (e:any) => {
         setEmailValue(e.target.value);
@@ -20,14 +22,17 @@ const Form = ()=> {
 
     async function sendForm(e:any) {
         e.preventDefault();
+        setError("");
         var res = await loginUser(null,null,pswValue,emailValue);
         console.log(res);
         if(res["login"] && res["cookie_id"]!="" && res["cookie_email"]!="") {
             localStorage.setItem("cookie_id",res["cookie_id"]);
             localStorage.setItem("cookie_email",res["cookie_email"]);
+            navigate("/home");
+            window.location.reload();
+        }else {
+            setError("User not found")
         }
-        navigate("/home");
-        window.location.reload();
     }
 
 
@@ -36,6 +41,7 @@ const Form = ()=> {
             <p className="text-xl mb-2 font-bold">Login</p>
             <Input type="text" placeholder="Username" className="mb-2" onChange={handleEmail}/>
             <Input type="password" placeholder="Password" className="mb-2" onChange={handlePsw}/>
+            <p>{error}</p>
             <Button onClick={sendForm}>Login</Button>
             
             <a onClick={() => navigate("/register")} className="block mt-2 text-center hover:underline">Register</a>
