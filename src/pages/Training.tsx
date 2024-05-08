@@ -85,13 +85,13 @@ function Training () {
     function mappaWorkout(item:any) {
         return (
             <>
-            <div className={`h-[10%] border rounded-xl bg-secondary mt-[4%] justify-around flex `}>
-                {/* @ts-ignore */}
-                <p className="text-secondary-foreground font-bold pl-[1%] text-xl mt-[4%]" 
-                onClick={() => {
+            <div className={`h-[10%] border rounded-xl bg-secondary mt-[4%] justify-around flex `} onClick={() => {
                     navigate("/workouts",{state:{nome: item.nome}});
                     } 
-                }
+                }>
+                {/* @ts-ignore */}
+                <p className="text-secondary-foreground font-bold pl-[1%] text-xl mt-[4%]" 
+                
                 >{item.nome}</p>
             </div>
             </>

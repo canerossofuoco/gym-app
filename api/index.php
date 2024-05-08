@@ -9,7 +9,8 @@
         '/request/workout' => 'requestWorkout',
         '/modify/exercise' => 'modifyExercise',
         '/request/exercises' => 'requestExercises',
-        '/add/exercise/set' => 'insertExerciseSet'
+        '/add/exercise/set' => 'insertExerciseSet',
+        '/modify/weight' => 'modifyWeight'
     );
 
     $url =  $_SERVER['PHP_SELF'];
@@ -384,4 +385,35 @@
             $res["login"] = false;
         echo json_encode($res);
     }
+
+    function modifyWeight() {
+        global $conn;
+        $res = array("array risposta" => "modifyWeight");
+        
+        // Verifica se il cookie è valido
+        if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
+            $res["login"] = true;
+            
+            // Recupera l'email dall'array POST
+            $email = $_POST["cookie_email"];
+            
+            // Recupera il peso dall'array POST
+            $peso = $_POST["peso"];
+            $query = "UPDATE utenti SET peso = '$peso' WHERE email = '$email';";
+            $result_query = $conn->query($query);
+            if ($result_query) {
+                $res["modifica"] = true;
+            } else {
+                $res["modifica"] = false;
+            }
+        } else {
+            // Il cookie non è valido, impostare il flag di login su falso
+            $res["login"] = false;
+        }
+        
+        // Restituisci la risposta come JSON
+        echo json_encode($res);
+    }
+    
+
 ?>

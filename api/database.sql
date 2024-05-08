@@ -9,7 +9,7 @@ CREATE TABLE utenti (
     cognome VARCHAR(50),
     eta INT,
     psw VARCHAR(100),
-    peso INT,
+    peso float,
     id_dati int
 );
 

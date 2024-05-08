@@ -3,19 +3,18 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { ThemeProvider } from "./components/theme-provider"
-import { useTheme } from "next-themes"
 import reportWebVitals from './test/reportWebVitals';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import Register from "./pages/Register"
-import Profile from "./pages/Profile"
-import Training from "./pages/Training"
-import Home from "./pages/Home"
-import Login from "./pages/Login" 
+import { useLocalStorage } from "@uidotdev/usehooks";
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-const theme = "dark";
-localStorage.setItem("theme",theme);
+
+var theme:any = "dark";
+if(localStorage.getItem("theme"))
+  theme = localStorage.getItem("theme");
+
 
 root.render(
   <React.StrictMode>
