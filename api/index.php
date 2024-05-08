@@ -10,7 +10,8 @@
         '/modify/exercise' => 'modifyExercise',
         '/request/exercises' => 'requestExercises',
         '/add/exercise/set' => 'insertExerciseSet',
-        '/modify/weight' => 'modifyWeight'
+        '/modify/weight' => 'modifyWeight',
+        '/register/user' => 'registerUser'
     );
 
     $url =  $_SERVER['PHP_SELF'];
@@ -415,5 +416,39 @@
         echo json_encode($res);
     }
     
+    function registerUser() {
+        global $conn;
+        $res = array("array risposta" => "registerUser");
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+        $nome = $_POST["name"];
+        $cognome = $_POST["surname"];
+        $eta = $_POST["age"];
+        $peso = $_POST["weight"];
 
+        // Esegui la query per verificare se l'email è già registrata
+        $queryCheckEmail = "SELECT * FROM utenti WHERE email = '$email';";
+        $resultCheckEmail = $conn->query($queryCheckEmail);
+    
+        if ($resultCheckEmail->num_rows > 0) {
+            // Se l'email è già registrata, restituisci un messaggio di errore
+            $res["register"] = false;
+        } else {
+            // Altrimenti, procedi con la registrazione dell'utente
+            $queryRegister = "INSERT INTO utenti (email, psw, nome, cognome, eta, peso) 
+                              VALUES ('$email', '$password', '$nome', '$cognome', $eta, $peso);";
+            $resultRegister = $conn->query($queryRegister);
+    
+            if ($resultRegister) {
+                // Se la registrazione è avvenuta con successo, restituisci un messaggio di successo
+                $res["register"] = true;
+            } else {
+                // Se si è verificato un errore durante la registrazione, restituisci un messaggio di errore
+                $res["register"] = false;
+            }
+        }
+        
+        echo json_encode($res);
+    }
+    
 ?>

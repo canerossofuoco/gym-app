@@ -9,6 +9,7 @@ import CaloriesPage from './pages/caloriesPage';
 import { loginUser } from './scripts/fetch';
 import { useEffect, useState } from 'react';
 import Workouts from './pages/Workouts';
+import RegisterPage from './pages/RegisterPage';
 
 async function login () {
   var cookie_id = localStorage.getItem("cookie_id");
@@ -36,16 +37,17 @@ const App = () => {
     <Routes>
       {authenticated ? (
         <>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/training" element={<Training />} />
           <Route path="/caloriespage" element={<CaloriesPage />} />
-          <Route path="*" element={<Home />} />
           <Route path="/workouts" element={<Workouts/>} />
+          <Route path="*" element={<Home />} />
         </>
       ) : (
         <>
-          <Route path="*" element={<Login />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<RegisterPage />} />
         </>
       )}
     </Routes>

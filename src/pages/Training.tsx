@@ -125,7 +125,7 @@ function Training () {
                                             //@ts-ignore
                                             if(response["inserimento"]) {
                                                 alert("aggiunto");
-                                                navigate("/");
+                                                navigate("/home");
                                             } 
                                         })
                                     }

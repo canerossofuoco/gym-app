@@ -63,7 +63,7 @@ function Profile() {
                 if(localStorage.getItem("theme"))
                     theme = localStorage.getItem("theme");
                 setTheme(theme);
-                navigate("/");
+                navigate("/home");
             }}>
                 <p className="text-secondary-foreground font-bold pt-[6%] pl-[4%] text-xl"  >Change Theme</p>
                 <img className={cssImg} src="/images/night-mode.png" />
@@ -133,6 +133,7 @@ function Profile() {
             <Button className = "left-[5%] absolute top-[70%] w-[90%] h-[10%] font-bold text-xl" variant="destructive" onClick={ ()=>{
                     localStorage.removeItem("cookie_id");
                     localStorage.removeItem("cookie_email");
+                    navigate("/");
                     window.location.reload();
                 }
                 }>Logout</Button>

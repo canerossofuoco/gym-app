@@ -26,7 +26,7 @@ const Form = ()=> {
             localStorage.setItem("cookie_id",res["cookie_id"]);
             localStorage.setItem("cookie_email",res["cookie_email"]);
         }
-        // navigate("/");
+        navigate("/home");
         window.location.reload();
     }
 
@@ -36,7 +36,9 @@ const Form = ()=> {
             <p className="text-xl mb-2 font-bold">Login</p>
             <Input type="text" placeholder="Username" className="mb-2" onChange={handleEmail}/>
             <Input type="password" placeholder="Password" className="mb-2" onChange={handlePsw}/>
-            <Button onClick={sendForm}>Accedi</Button>
+            <Button onClick={sendForm}>Login</Button>
+            
+            <a onClick={() => navigate("/register")} className="block mt-2 text-center hover:underline">Register</a>
         </form>
     )
 }

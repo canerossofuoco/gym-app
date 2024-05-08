@@ -131,7 +131,7 @@ function Workouts() {
         <div id="workoutDiv" className="h-[91%] overflow-x-hidden overflow-y-auto p-2">
             <div className="flex h-[15%] rounded-xl justify-between ">
                 <h1 className="text-4xl font-bold tracking-tight p-[10%]">{location.state.nome}</h1>
-                <img className={cssImg+" mt-[4%] "} src="/images/cross.png" onClick={()=>navigate("/")}/>
+                <img className={cssImg+" mt-[4%] "} src="/images/cross.png" onClick={()=>navigate("/home")}/>
             </div>
             <div className="h-[10%]">
                 <div className="">

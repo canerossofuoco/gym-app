@@ -5,9 +5,16 @@ import { Navigate, useNavigate } from 'react-router-dom';
 function Navbar() {
     const navigate = useNavigate();
      //filtro da applciare per fare le icone bianche-> filter : invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+
+    const [selected,setSelected] = useState('');
+
+     useEffect(() => { 
+      console.log("navabarReload")
+       setSelected(window.location.pathname);
+    }, []);
+    
     var currentTheme = localStorage.getItem("theme");
     var cssImg = currentTheme==="light" ? "h-[70%] pb-[3%]" : "h-[70%] pb-[3%] filter invert-[100%] sepia-[100%] saturate-[0%] hue-rotate-[288deg] brightness-[102%] contrast-[102%]";
-    var selected = window.location.pathname;
     var css_selected = cssImg+" border-b-4 border-b-black";
     return (
       <div className="border h-[9%] flex justify-evenly items-center rounded-t-xl">

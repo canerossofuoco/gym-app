@@ -207,3 +207,16 @@ export async function modifyWeight(id:any, email:any, nuovoPeso:number) {
     return res;
 }
 
+
+export async function registerUser(userData:any) {
+    let res;
+
+    try {
+        const response = await axios.post(urlServer + "/register/user", qs.stringify(userData));
+        res = response.data;
+    } catch (error) {
+        console.error("Errore durante la richiesta di registrazione:", error);
+    }
+
+    return res;
+}

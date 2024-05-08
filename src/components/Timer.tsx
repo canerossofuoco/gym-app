@@ -26,7 +26,7 @@ const Timer = () => {
   return (
     <>
     <div className=" relative">
-        <Button className="relative left-[35%] w-[30%]" onClick={ ()=>navigate("/") }>End workout</Button>
+        <Button className="relative left-[35%] w-[30%]" onClick={ ()=>navigate("/home") }>End workout</Button>
         <p className="relative left-[40%] w-[45%]  font-bold text-xl tracking-tight">{hours} : {minutes} : {seconds}</p>
     </div>
     </>
