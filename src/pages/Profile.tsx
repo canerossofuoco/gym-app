@@ -29,14 +29,23 @@ function Profile() {
     return (
         <>
         <div id="profileDiv" className="h-[91%] relative">
-            <div className = " border bg-secondary rounded-xl absolute w-[90%] h-[35%] left-[5%] top-[5%] " id="ProfileCard" >
+            <div className = " border bg-secondary rounded-xl absolute w-[90%] h-[35%] left-[5%] top-[5%] flex flex-wrap" id="ProfileCard" >
             <img className={cssImg} src="/images/user.png"/>
-                <div>
+                <div className="relative left-[5%]">
                     {/*@ts-ignore*/}
                     <p className="text-4xl font-bold tracking-tight p-[5%]">{profile["nome"]}</p>
                     {/*@ts-ignore*/}
                     <p className="text-4xl font-bold tracking-tight p-[5%]">{profile["cognome"]}</p>
+                    
                 </div>
+                <div className="absolute top-[40%] flex flex-wrap">
+                        <p className="text-4xl font-bold tracking-tight p-[5%] relative left-[2%]">Età :</p>
+                        {/*@ts-ignore*/}
+                        <p className="text-4xl font-bold tracking-tight p-[5%]">{profile["eta"]}</p>
+                        <p className="text-4xl font-bold tracking-tight p-[5%] relative left-[2%]">Peso :</p>
+                        {/*@ts-ignore*/}
+                        <p className="text-4xl font-bold tracking-tight p-[5%]">{profile["peso"]}</p>
+                    </div>    
             </div>
             <Button className = "left-[5%] absolute top-[45%] w-[90%] h-[7%]" variant="destructive" onClick={ ()=>{
                     localStorage.removeItem("cookie_id");
