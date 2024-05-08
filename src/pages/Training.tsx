@@ -12,7 +12,7 @@ import { Button } from "../components/button";
 import { Input } from "../components/input"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { addExercise,addExerciseToWorkout,addWorkout,requestWorkout } from "../scripts/fetch";
+import { addExercisesToWorkout,requestWorkout } from "../scripts/fetch";
 import { useNavigate } from "react-router-dom";
 
 function delay(ms: number) {
@@ -98,6 +98,12 @@ function Training () {
         );
     }
 
+    async function createWorkout() {
+        var res;
+        res = await addExercisesToWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises,workoutname);
+        return res;
+    }
+
     return (
         <>
             <div id="trainingDiv" className="h-[91%] w-full p-[5%] overflow-x-hidden overflow-y-auto">
@@ -111,17 +117,17 @@ function Training () {
                                 <Input type="text" placeholder="Workout Name" className="mb-2 h-10 w-[80%]" onChange={handleNameChange}/>
                                 <Input type="text" placeholder="Muscle worked" className="mb-2 h-10 w-[80%]" onChange={handleChange} />
                                 <Button className="w-[20%] h-10" onClick={ async () => {
+                                    //@ts-ignore
                                     var res;
                                     if(workoutname!= "" && clickedExercises.length>0) {
-                                        await addWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname)
-                                        for (let index = 0; index < clickedExercises.length; index++) {
-                                            res = await addExercise(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises[index]);
-                                            res = await addExerciseToWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),workoutname,clickedExercises[index]);
-                                        }
-                                        if(res["inserimento"]) {
-                                            alert("aggiunto");
-                                            navigate("/");
-                                        } 
+                                        createWorkout().then(response => {
+                                            console.log(response);
+                                            //@ts-ignore
+                                            if(response["inserimento"]) {
+                                                alert("aggiunto");
+                                                navigate("/");
+                                            } 
+                                        })
                                     }
                                 }}>Done</Button>
                             </DialogTitle>

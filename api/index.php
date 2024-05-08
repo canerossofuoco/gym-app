@@ -4,9 +4,7 @@
         '/add/Food' => 'addFood',
         '/loginUser' => 'loginUser',
         '/request/Calories' => 'requestCalories',
-        '/add/workout' => 'addWorkout',
-        '/add/exercise' => 'addExercise',
-        '/add/exercise/workout' => 'addExerciseToWorkout',
+        '/add/exercises/workout' => 'addExercisesToWorkout',
         '/request/profile' => 'requestProfile',
         '/request/workout' => 'requestWorkout',
         '/modify/exercise' => 'modifyExercise',
@@ -130,63 +128,83 @@
 
     }
 
-    function addExercise() { //works
-        global $conn;
-        $res = array("array risposta" => "addExercise");
-        if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
-            $res["login"] = true;
-            $nome = $_POST["nome"];
-            $email = $_POST["cookie_email"];
-            $query = "insert into esercizi (nome,email_utente) values('$nome','$email');";
-            $result_query = $conn->query($query);
-            if($result_query)
-                $res["inserimento"] = true;
-            else 
-                $res["inserimento"] = false;
-        }else 
-            $res["login"] = false;
-        echo json_encode($res);
-    }
-
-    function addExerciseToWorkout() { //works
-
-        $idw = -1;
-        $ide = -1;
+    function addExercisesToWorkout() {
         global $conn;
         $res = array("array risposta" => "addExerciseToWorkout");
-        if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
+    
+        if (verify_cookie($_POST["cookie_id"], $_POST["cookie_email"])) {
             $res["login"] = true;
-            $nome = $_POST["nome"];
             $email = $_POST["cookie_email"];
-            $nome_esercizio = $_POST["nome_esercizio"];
-
-            $query = "select * from workouts where nome='$nome' and email_utente='$email';";  //seleziono id workout
-            
-            $res_query = $conn->query($query);
-            if($res_query->num_rows==1) {
-                $row = $res_query->fetch_assoc();
-                $idw = $row["id"];
+            $nomeWorkout = $_POST["nomeWorkout"];
+            $exerciseArray = $_POST["exerciseArray"];
+    
+            // Controllo se il workout esiste già, altrimenti lo creo
+            $queryCheckWorkoutExist = "SELECT * FROM workouts WHERE nome = '$nomeWorkout' AND email_utente = '$email';";
+            $resultQueryCheckWorkout = $conn->query($queryCheckWorkoutExist);
+    
+            if ($resultQueryCheckWorkout->num_rows == 0) {
+                // Se il workout non esiste, lo inserisco
+                $queryInsertWorkout = "INSERT INTO workouts (nome, email_utente) VALUES ('$nomeWorkout', '$email');";
+                $resultInsertWorkout = $conn->query($queryInsertWorkout);
+    
+                if (!$resultInsertWorkout) {
+                    $res["inserimentoWorkout"] = false;
+                    echo json_encode($res);
+                    return;
+                }
             }
-
-            $query = "select * from esercizi where nome='$nome_esercizio' and email_utente='$email';"; //seleziono id esercizio
+            $queryCheckWorkoutExist = "SELECT * FROM workouts WHERE nome = '$nomeWorkout' AND email_utente = '$email';";
+            $result3 = $conn->query($queryCheckWorkoutExist);
+            // Ottengo l'ID del workout
+            $rowWorkout = $result3->fetch_assoc();
+            $idWorkout = $rowWorkout["id"];
             
-            $res_query = $conn->query($query);
-            if($res_query->num_rows==1) {
-                $row = $res_query->fetch_assoc();
-                $ide = $row["id"];
+            // Inserisco gli esercizi nel workout
+            foreach ($exerciseArray as $value) {
+                $nomeEsercizio = $value;
+                
+                // Controllo se l'esercizio esiste già, altrimenti lo creo
+                $queryCheckExerciseExist = "SELECT * FROM esercizi WHERE nome = '$nomeEsercizio' AND email_utente = '$email';";
+                
+                $resultQueryCheckExercise = $conn->query($queryCheckExerciseExist);
+                //print_r($resultQueryCheckExercise->fetch_assoc());
+                if ($resultQueryCheckExercise->num_rows == 0) {
+                    // Se l'esercizio non esiste, lo inserisco
+                    $queryInsertExercise = "INSERT INTO esercizi (nome, email_utente) VALUES ('$nomeEsercizio', '$email');";
+                    $resultInsertExercise = $conn->query($queryInsertExercise);
+    
+                    if (!$resultInsertExercise) {
+                        $res["inserimentoEsercizio"] = false;
+                        echo json_encode($res);
+                        return;
+                    }
+                }
+                $queryCheckExerciseExist = "SELECT * FROM esercizi WHERE nome = '$nomeEsercizio' AND email_utente = '$email';";
+                $result2 = $conn->query($queryCheckExerciseExist);
+                // Ottengo l'ID dell'esercizio
+                $rowExercise = $result2->fetch_assoc();
+                //print_r($rowExercise);
+                $idEsercizio = $rowExercise["id"];
+                // Inserisco l'associazione tra workout ed esercizio
+                $queryInsertAssociation = "INSERT INTO esercizi_workouts (id_workout, id_esercizio) VALUES ($idWorkout, $idEsercizio);";
+                $resultInsertAssociation = $conn->query($queryInsertAssociation);
+    
+                if (!$resultInsertAssociation) {
+                    $res["inserimentoAssociazione"] = false;
+                    echo json_encode($res);
+                    return;
+                }
             }
-            
-            $query = "insert into esercizi_workouts values($idw,$ide);"; //inserimento associazione workout-esercizio
-            
-            $res_query = $conn->query($query);
-            if($res_query)
-                $res["inserimento"]  = true;
-            else 
-                $res["inserimento"] = false;
-        }else 
+    
+            $res["inserimento"] = true;
+        } else {
             $res["login"] = false;
+        }
+    
         echo json_encode($res);
     }
+    
+
 
     function requestProfile() {  //works
         global $conn;

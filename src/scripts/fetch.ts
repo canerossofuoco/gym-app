@@ -64,57 +64,18 @@ export async function requestCalories(id: any, email: any) {
     return res;
 }
 
-export async function addWorkout(id: any, email: any, n: string) {
+
+export async function addExercisesToWorkout(id: any, email: any, arrayExercises:any , workoutName:string ) {
     let res: any;
 
     const data = {
         cookie_id: "" + id,
         cookie_email: "" + email,
-        nome: n
+        nomeWorkout : "" + workoutName,
+        exerciseArray: arrayExercises
     };
 
-    await axios.post(urlServer + "/add/workout", qs.stringify(data))
-        .then((response: AxiosResponse) => {
-            res = response.data;
-        })
-        .catch((error: any) => {
-            console.error("Errore durante la richiesta:", error);
-        });
-
-    return res;
-}
-
-export async function addExercise(id: any, email: any, n: string) {
-    let res: any;
-
-    const data = {
-        cookie_id: "" + id,
-        cookie_email: "" + email,
-        nome: n
-    };
-
-    await axios.post(urlServer + "/add/exercise", qs.stringify(data))
-        .then((response: AxiosResponse) => {
-            res = response.data;
-        })
-        .catch((error: any) => {
-            console.error("Errore durante la richiesta:", error);
-        });
-
-    return res;
-}
-
-export async function addExerciseToWorkout(id: any, email: any, n: string, n_e: string) {
-    let res: any;
-
-    const data = {
-        cookie_id: "" + id,
-        cookie_email: "" + email,
-        nome: n,
-        nome_esercizio: n_e
-    };
-
-    await axios.post(urlServer + "/add/exercise/workout", qs.stringify(data))
+    await axios.post(urlServer + "/add/exercises/workout", qs.stringify(data))
         .then((response: AxiosResponse) => {
             res = response.data;
         })
