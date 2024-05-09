@@ -111,25 +111,6 @@
 
     }
 
-    function addWorkout() {  //works
-        global $conn;
-        $res = array("array risposta" => "addWorkout");
-        if(verify_cookie($_POST["cookie_id"],$_POST["cookie_email"])) {
-            $res["login"] = true;
-            $nome = $_POST["nome"];
-            $email = $_POST["cookie_email"];
-            $query = "insert into workouts (nome,email_utente) values('$nome','$email');";
-            $res_query = $conn->query($query);
-            if($res_query)
-                $res["inserimento"] = true;
-            else 
-                $res["inserimento"] = false;
-        }else 
-            $res["login"] = false;
-        echo json_encode($res);
-
-    }
-
     function addExercisesToWorkout() {
         global $conn;
         $res = array("array risposta" => "addExerciseToWorkout");
