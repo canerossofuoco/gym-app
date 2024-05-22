@@ -3,9 +3,12 @@ import { Button } from "../components/button"
 import { loginUser } from "../scripts/fetch"
 import { useState } from "react";
 import { Navigate, useNavigate } from 'react-router-dom';
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 
 const Form = ()=> {
+    const [cookie_id,setCookieId] = useLocalStorage("cookie_id", null);
+    const [cookie_email,setCookieEmail] = useLocalStorage("cookie_email", null);
     const navigate = useNavigate();
     const [emailValue, setEmailValue] = useState('');
     const [pswValue, setPswValue] = useState('');
@@ -26,10 +29,10 @@ const Form = ()=> {
         var res = await loginUser(null,null,pswValue,emailValue);
         console.log(res);
         if(res["login"] && res["cookie_id"]!="" && res["cookie_email"]!="") {
-            localStorage.setItem("cookie_id",res["cookie_id"]);
-            localStorage.setItem("cookie_email",res["cookie_email"]);
+            setCookieId(res["cookie_id"]);
+            setCookieEmail(res["cookie_email"]);
             navigate("/home");
-            window.location.reload();
+           //window.location.reload();
         }else {
             setError("User not found")
         }

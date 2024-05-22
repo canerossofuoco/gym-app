@@ -11,6 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
   } from "../components/dialog"
+import { useLocalStorage } from '@uidotdev/usehooks';
 
 interface FoodItem {
     name: string;
@@ -23,11 +24,11 @@ interface FoodItem {
 const CaloriesPage: React.FC = () => {
     const [resultArray, setResultArray] = useState<FoodItem[]>([]);
     const [inputValue, setInputValue] = useState('');
+    const [cookie_id,setCookieId] = useLocalStorage("cookie_id", null);
+    const [cookie_email,setCookieEmail] = useLocalStorage("cookie_email", null);
 
     async function handleClick (calories: number, carbo: number, protein: number, fat: number) {
         console.log(calories, carbo, protein, fat);
-        var cookie_id = localStorage.getItem("cookie_id");
-        var cookie_email = localStorage.getItem("cookie_email");
         var res = await addFood(cookie_id,cookie_email,carbo,protein,fat,calories);
         console.log(res);
     };

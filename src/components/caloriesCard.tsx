@@ -1,11 +1,13 @@
 import { Progress } from "./progress";
 import { requestCalories } from "../scripts/fetch";
 import { useEffect, useState } from "react";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 function CaloriesCard() {
+    const [cookie_id,setCookieId] = useLocalStorage("cookie_id", null);
+    const [cookie_email,setCookieEmail] = useLocalStorage("cookie_email", null);
     async function getData() {
-        var cookie_id = localStorage.getItem("cookie_id");
-        var cookie_email = localStorage.getItem("cookie_email");
+       
         var res = await requestCalories(cookie_id,cookie_email);
         var dati = res["dati_kcal"];
         setDataValue(dati);

@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { addExercisesToWorkout,requestWorkout } from "../scripts/fetch";
 import { useNavigate } from "react-router-dom";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
@@ -22,7 +23,8 @@ function delay(ms: number) {
 function Training () {
 
     const [workoutData, setWorkoutData] = useState([]);
-
+    const [cookie_id,setCookieId] = useLocalStorage("cookie_id", null);
+    const [cookie_email,setCookieEmail] = useLocalStorage("cookie_email", null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,7 +32,7 @@ function Training () {
         setClickedExercises([]);
         async function fetchWorkout() {
             try {
-                var res = await requestWorkout(localStorage.getItem("cookie_id"), localStorage.getItem("cookie_email"));
+                var res = await requestWorkout(cookie_id,cookie_email);
                 res = res["workouts"];
                 setWorkoutData(res); // Imposta i dati del workout nello stato
             } catch (error) {
@@ -100,7 +102,7 @@ function Training () {
 
     async function createWorkout() {
         var res;
-        res = await addExercisesToWorkout(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),clickedExercises,workoutname);
+        res = await addExercisesToWorkout(cookie_id,cookie_email,clickedExercises,workoutname);
         return res;
     }
 

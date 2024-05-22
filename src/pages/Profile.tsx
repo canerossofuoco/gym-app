@@ -15,11 +15,14 @@ import {
   } from "../components/dialog";
 import { Label } from "../components/label";
 import { Input } from "../components/input"
+import { useLocalStorage } from "@uidotdev/usehooks";
 function Profile() {
 
     const [profile, setProfile] = useState([]);
     const [weight,setWeight] = useState(-1);
     const { setTheme } = useTheme()
+    const [cookie_id,setCookieId] = useLocalStorage("cookie_id", null);
+    const [cookie_email,setCookieEmail] = useLocalStorage("cookie_email", null);
 
     useEffect(()=>{
         getProfile().then(response => {
@@ -29,7 +32,7 @@ function Profile() {
 
     async function getProfile() {
         var res;
-        res = requestProfile(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"));
+        res = requestProfile(cookie_id,cookie_email);
         return res;
     }
 
@@ -76,7 +79,7 @@ function Profile() {
     }
 
    async function sendData() {
-        var res = await modifyWeight(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),weight);
+        var res = await modifyWeight(cookie_id,cookie_email,weight);
         console.log(res);
         getProfile().then(response => {
             setProfile(response);
@@ -131,10 +134,10 @@ function Profile() {
             </DialogContent>
             </Dialog>
             <Button className = "left-[5%] absolute top-[70%] w-[90%] h-[10%] font-bold text-xl" variant="destructive" onClick={ ()=>{
-                    localStorage.removeItem("cookie_id");
-                    localStorage.removeItem("cookie_email");
+                    setCookieEmail(null);
+                    setCookieId(null);
                     navigate("/");
-                    window.location.reload();
+                    //window.location.reload();
                 }
                 }>Logout</Button>
             <ChangeTheme />

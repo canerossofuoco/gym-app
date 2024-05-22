@@ -6,6 +6,7 @@ import { requestExercises,insertExerciseSet } from "../scripts/fetch";
 import { useEffect, useState } from "react";
 import { Input } from "../components/input";
 import Timer from "../components/Timer";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 function Workouts() {
     const navigate = useNavigate();
@@ -13,7 +14,8 @@ function Workouts() {
     const [exerciseArray, setExerciseArray] = useState([]);
     const [showTimer, setShowTimer] = useState(false);
     const [reload, setReload] = useState(true);
-
+    const [cookie_id,setCookieId] = useLocalStorage("cookie_id", null);
+    const [cookie_email,setCookieEmail] = useLocalStorage("cookie_email", null);
     useEffect(() => {
         console.log("reloadWorkout")
         if(exerciseArray.keys.length === 0)
@@ -24,7 +26,7 @@ function Workouts() {
 
 
     async function getExercises() {
-        var res = await requestExercises(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),location.state.nome);
+        var res = await requestExercises(cookie_id,cookie_email,location.state.nome);
         console.log(res);
         return res["exercises"];
     }
@@ -62,7 +64,7 @@ function Workouts() {
             //@ts-ignore
             var repetitions  = document.getElementById(""+array[0][0]+","+array[0][1]+",reps").value;
 
-            res = await insertExerciseSet(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),array[0][1],array[0][0],weightLifted,repetitions)
+            res = await insertExerciseSet(cookie_id,cookie_email,array[0][1],array[0][0],weightLifted,repetitions)
             console.log(res);
         }  
     }
@@ -72,7 +74,7 @@ function Workouts() {
         var res;
         if(showTimer) {
             console.log(e.target.id);
-            res = await insertExerciseSet(localStorage.getItem("cookie_id"),localStorage.getItem("cookie_email"),e.target.id,1,0,0)
+            res = await insertExerciseSet(cookie_id,cookie_email,e.target.id,1,0,0)
             console.log(res);
             getExercises().then(response => {
                 setExerciseArray(response);
